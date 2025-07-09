@@ -1,0 +1,158 @@
+ໄດ້ເລີຍ\! ນີ້ແມ່ນໂຄງສ້າງ Text Prompt ສຳລັບ AI ເພື່ອວິເຄາະໂປຣເຈັກລະບົບເຊົ່າລົດຂອງທ່ານອີກຄັ້ງ. ທ່ານສາມາດນຳໃຊ້ Prompt ນີ້ໄປວາງໃສ່ AI ເພື່ອຂໍການວິເຄາະໄດ້ເລີຍ:
+
+-----
+
+```text
+## Project Analysis Request: Car Rental System Development
+
+**Objective:** Analyze the provided information for a "Car Rental System" project and offer insights, potential improvements, or considerations from a Full Stack Web Developer perspective.
+
+---
+
+### Project Overview:
+
+The goal is to build a comprehensive Car Rental System that serves both customers and administrators. The system aims to streamline the car rental process, from booking and payment to vehicle and user management, and financial tracking.
+
+---
+
+### Key Features and Functionality:
+
+**1. Customer-facing (Front-end):**
+    * **Car Selection & Booking:** Customers can browse, search (by car type, availability, location), and select cars. They can choose booking plans, pickup/return dates, and locations.
+    * **Booking Confirmation & Payment:** Upon booking, the system displays a QR code for payment.
+    * **Payment Notification:** Customers can notify the system after making a payment.
+    * **Login via Phone Number:** Customers can log in using their phone number (likely via OTP for security).
+    * **Booking History & Status:** Logged-in customers can view their booking history and payment status.
+    * **Personal Profile:** Access to their personal information, limited to non-admin data.
+    * **Strict Access Control:** Customers are explicitly prevented from accessing any back-end or administrative functionalities.
+
+**2. Administrator-facing (Back-end):**
+    * **User Management:** Add, edit, delete users (both customers and staff), and define user roles/permissions.
+    * **Booking Management:** Track latest bookings, confirm bookings, and verify payments.
+    * **Car Management:** Add, edit, delete car details (including car types).
+    * **Driver Management:** Manage driver information (if "car with driver" service is offered).
+    * **Income & Expense Tracking:** Record all financial transactions (income from bookings, various expenses).
+    * **Reporting System:** Generate essential reports for business analysis (see "Required Reports" section below).
+    * **Login Segregation:** Administrators/staff log in separately (e.g., via email/password) and have access to back-end functionalities based on their assigned roles.
+
+---
+
+### Database Schema (Simplified for Core Entities):
+
+Below are the detailed table structures including column names, data types, and descriptions.
+
+**1. `Users` Table:**
+    * `user_id`: INT (PK) - User ID
+    * `first_name`: VARCHAR(100) - First Name
+    * `last_name`: VARCHAR(100) - Last Name
+    * `gender`: ENUM('Male', 'Female', 'Other') - Gender
+    * `date_of_birth`: DATE - Date of Birth
+    * `phone_number`: VARCHAR(20) (UNIQUE) - Phone Number (Login, Contact)
+    * `email`: VARCHAR(255) (UNIQUE) - Email (Login)
+    * `password_hash`: VARCHAR(255) - Hashed Password (for admin/email logins)
+    * `profile_image_url`: VARCHAR(255) - URL for user's profile image
+    * `address`: VARCHAR(255) - Address
+    * `city`: VARCHAR(100) - City
+    * `province`: VARCHAR(100) - Province
+    * `zip_code`: VARCHAR(20) - Zip Code
+    * `user_role`: ENUM('customer', 'admin', 'staff') - User Role
+    * `created_at`: DATETIME - Creation Timestamp
+    * `updated_at`: DATETIME - Last Updated Timestamp
+
+**2. `CarTypes` Table:**
+    * `type_id`: INT (PK) - Car Type ID
+    * `type_name`: VARCHAR(100) - Type Name (e.g., Sedan, SUV)
+    * `description`: TEXT - Description of car type
+
+**3. `Cars` Table:**
+    * `car_id`: INT (PK) - Car ID
+    * `type_id`: INT (FK to CarTypes) - Car Type ID
+    * `make`: VARCHAR(100) - Car Make
+    * `model`: VARCHAR(100) - Car Model
+    * `year`: INT - Year of Manufacture
+    * `license_plate`: VARCHAR(50) (UNIQUE) - License Plate Number
+    * `daily_rate`: DECIMAL(10, 2) - Daily Rental Rate
+    * `monthly_rate`: DECIMAL(10, 2) - Monthly Rental Rate (if applicable)
+    * `current_location`: VARCHAR(255) - Current location of the car
+    * `status`: ENUM('available', 'rented', 'maintenance') - Car Status
+    * `image_url`: VARCHAR(255) - URL for car image
+
+**4. `Drivers` Table (if "Car with Driver" service is offered):**
+    * `driver_id`: INT (PK) - Driver ID
+    * `first_name`: VARCHAR(100) - First Name
+    * `last_name`: VARCHAR(100) - Last Name
+    * `gender`: ENUM('Male', 'Female', 'Other') - Gender
+    * `date_of_birth`: DATE - Date of Birth
+    * `phone_number`: VARCHAR(20) (UNIQUE) - Driver Phone Number
+    * `email`: VARCHAR(255) (UNIQUE) - Driver Email
+    * `license_number`: VARCHAR(50) (UNIQUE) - Driver's License Number
+    * `license_expiry_date`: DATE - License Expiry Date
+    * `driver_image_url`: VARCHAR(255) - URL for driver's image
+    * `address`: VARCHAR(255) - Address
+    * `city`: VARCHAR(100) - City
+    * `province`: VARCHAR(100) - Province
+    * `zip_code`: VARCHAR(20) - Zip Code
+    * `is_available`: BOOLEAN - Driver Availability Status
+    * `created_at`: DATETIME - Creation Timestamp
+    * `updated_at`: DATETIME - Last Updated Timestamp
+
+**5. `Bookings` Table:**
+    * `booking_id`: INT (PK) - Booking ID
+    * `user_id`: INT (FK to Users) - Customer User ID
+    * `car_id`: INT (FK to Cars) - Booked Car ID
+    * `driver_id`: INT (FK to Drivers, NULLABLE) - Assigned Driver ID (if applicable)
+    * `pickup_date`: DATE - Pickup Date
+    * `return_date`: DATE - Return Date
+    * `pickup_location`: VARCHAR(255) - Pickup Location
+    * `return_location`: VARCHAR(255) - Return Location
+    * `total_price`: DECIMAL(10, 2) - Total Price for Booking
+    * `booking_status`: ENUM('pending', 'confirmed', 'cancelled', 'completed') - Booking Status
+    * `payment_status`: ENUM('pending', 'paid', 'refunded') - Payment Status
+    * `qr_code_data`: VARCHAR(255) - Data to generate QR code for payment
+    * `booking_date`: DATETIME - Booking Timestamp
+
+**6. `Payments` Table:**
+    * `payment_id`: INT (PK) - Payment ID
+    * `booking_id`: INT (FK to Bookings) - Associated Booking ID
+    * `amount`: DECIMAL(10, 2) - Payment Amount
+    * `payment_method`: VARCHAR(50) - Payment Method (e.g., QR Code, Bank Transfer)
+    * `transaction_id`: VARCHAR(255) (UNIQUE) - External Transaction ID
+    * `payment_date`: DATETIME - Payment Timestamp
+    * `status`: ENUM('success', 'failed', 'pending') - Payment Status
+
+**7. `Transactions` Table (for Income/Expense):**
+    * `transaction_id`: INT (PK) - Transaction ID
+    * `booking_id`: INT (FK to Bookings, NULLABLE) - Associated Booking ID (if income from booking)
+    * `type`: ENUM('income', 'expense') - Transaction Type
+    * `amount`: DECIMAL(10, 2) - Transaction Amount
+    * `description`: TEXT - Transaction Description
+    * `transaction_date`: DATETIME - Transaction Date
+    * `recorded_by`: INT (FK to Users) - User ID who recorded the transaction (admin/staff)
+
+---
+
+### Required Reports (Back-end):
+
+1.  **Booking Report:** All bookings by date, status, car type; total bookings over time; customer details.
+2.  **Car Availability Report:** Status of all cars (available, rented, maintenance); car utilization.
+3.  **Payment Report:** Successful, pending, failed payments; total revenue from bookings.
+4.  **Income-Expense Report:** Summary of all income and expenses over periods (daily, monthly, yearly); profit/loss calculation.
+
+---
+
+### AI Analysis Request:
+
+Based on the provided project overview, features, and detailed database schema, please analyze the following:
+
+* **Potential Strengths:** What are the strong points of this proposed structure?
+* **Potential Weaknesses/Gaps:** Are there any missing features, data points, or potential bottlenecks in the design?
+* **Security Considerations:** Identify any immediate security concerns, especially regarding user authentication (phone number vs. email), payment processing, and access control.
+* **Scalability:** How well can this design scale if the business grows significantly (more cars, users, bookings)?
+* **Performance:** Are there any aspects that might lead to performance issues?
+* **Technology Stack Recommendations:** Based on these requirements, suggest suitable technology stacks for:
+    * **Front-end:** (e.g., React, Vue, Angular)
+    * **Back-end:** (e.g., Node.js, Python/Django/Flask, PHP/Laravel, Go)
+    * **Database:** (e.g., PostgreSQL, MySQL, MongoDB)
+* **Development Roadmap Suggestions:** Outline a high-level phased approach for development (e.g., MVP features, subsequent phases).
+* **Any other valuable insights or best practices** relevant to building such a system.
+```

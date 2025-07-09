@@ -1,0 +1,1 @@
+<template><div>Report Bookings</div></template>

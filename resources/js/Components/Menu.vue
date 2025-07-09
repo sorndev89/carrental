@@ -3,13 +3,13 @@
         <!-- Logo -->
         <div class="sidebar-logo ">
             <router-link to="/" class="logo logo-normal">
-                <img :src="url + '/assets/img/logo.svg'" alt="Img">
+                <!-- <img :src="url + '/assets/img/logo.svg'" alt="Img"> -->
             </router-link>
             <router-link to="/" class="logo logo-white">
-                <img :src="url + '/assets/img/logo-white.svg'" alt="Img">
+                <!-- <img :src="url + '/assets/img/logo-white.svg'" alt="Img"> -->
             </router-link>
             <router-link to="/" class="logo-small">
-                <img :src="url + '/assets/img/logo-small.png'" alt="Img">
+                <!-- <img :src="url + '/assets/img/logo-small.png'" alt="Img"> -->
             </router-link>
             <a id="toggle_btn" href="javascript:void(0);" @click="toggleSidebar()">
                 <i data-feather="chevrons-left"></i>
@@ -141,714 +141,135 @@ export default {
         return {
             url: window.location.origin,
             openSubmenus: {}, // Object to keep track of open submenus
-            menuData: [
+            menuData: 
+            [
                 {
-                    header: 'Main',
+                    header: 'ແຜງຄວບຄຸມ', // Dashboard
                     items: [
                         {
-                            title: 'Dashboard',
-                            link: 'javascript:void(0);', // This is a toggle parent
-                            icon: 'ti ti-layout-grid fs-16 me-2',
-                            submenu: [
-                                { title: 'Admin Dashboard', link: '/' }, // Assuming '/' is your root dashboard
-                                { title: 'Admin Dashboard 2', link: '/admin-dashboard-2' },
-                                { title: 'Sales Dashboard', link: '/sales-dashboard' },
-                            ]
-                        },
-                        {
-                            title: 'Super Admin',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-user-edit fs-16 me-2',
-                            submenu: [
-                                { title: 'Dashboard', link: '/dashboard' },
-                                { title: 'Companies', link: '/companies' },
-                                { title: 'Subscriptions', link: '/subscription' },
-                                { title: 'Packages', link: '/packages' },
-                                { title: 'Domain', link: '/domain' },
-                                { title: 'Purchase Transaction', link: '/purchase-transaction' },
-                            ]
-                        },
-                        {
-                            title: 'Application',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-brand-apple-arcade fs-16 me-2',
-                            submenu: [
-                                { title: 'Chat', link: '/chat' },
-                                {
-                                    title: 'Call',
-                                    link: 'javascript:void(0);',
-                                    submenuTwo: true,
-                                    submenu: [
-                                        { title: 'Video Call', link: '/video-call' },
-                                        { title: 'Audio Call', link: '/audio-call' },
-                                        { title: 'Call History', link: '/call-history' },
-                                    ]
-                                },
-                                { title: 'Calendar', link: '/calendar' },
-                                { title: 'Contacts', link: '/contacts' },
-                                { title: 'Email', link: '/email' },
-                                { title: 'To Do', link: '/todo' },
-                                { title: 'Notes', link: '/notes' },
-                                { title: 'File Manager', link: '/file-manager' },
-                                { title: 'Projects', link: '/projects' },
-                                {
-                                    title: 'Ecommerce',
-                                    link: 'javascript:void(0);',
-                                    submenuTwo: true,
-                                    submenu: [
-                                        { title: 'Products', link: '/products' },
-                                        { title: 'Orders', link: '/orders' },
-                                        { title: 'Customers', link: '/customers' },
-                                        { title: 'Cart', link: '/cart' },
-                                        { title: 'Checkout', link: '/checkout' },
-                                        { title: 'Wishlist', link: '/wishlist' },
-                                        { title: 'Reviews', link: '/reviews' },
-                                    ]
-                                },
-                                { title: 'Social Feed', link: '/social-feed' },
-                                { title: 'Search List', link: '/search-list' },
-                            ]
-                        },
-                        {
-                            title: 'Layouts',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-layout-sidebar-right-collapse fs-16 me-2',
-                            submenu: [
-                                { title: 'Horizontal', link: '/layout-horizontal' },
-                                { title: 'Detached', link: '/layout-detached' },
-                                { title: 'Two Column', link: '/layout-two-column' },
-                                { title: 'Hovered', link: '/layout-hovered' },
-                                { title: 'Boxed', link: '/layout-boxed' },
-                                { title: 'RTL', link: '/layout-rtl' },
-                                { title: 'Dark', link: '/layout-dark' },
-                            ]
+                            title: 'ແຜງຄວບຄຸມ', // Dashboard
+                            link: '/admin/dashboard',
+                            icon: 'ti ti-dashboard fs-16 me-2',
                         },
                     ]
                 },
                 {
-                    header: 'Inventory',
-                    items: [
-                        { title: 'Products', link: '/product-list', icon: 'ti ti-box fs-16 me-2' },
-                        { title: 'Create Product', link: '/add-product', icon: 'ti ti-table-plus fs-16 me-2' },
-                        { title: 'Expired Products', link: '/expired-products', icon: 'ti ti-progress-alert fs-16 me-2' },
-                        { title: 'Low Stocks', link: '/low-stocks', icon: 'ti ti-trending-up-2 fs-16 me-2' },
-                        { title: 'Category', link: '/category-list', icon: 'ti ti-list-details fs-16 me-2' },
-                        { title: 'Sub Category', link: '/sub-categories', icon: 'ti ti-carousel-vertical fs-16 me-2' },
-                        { title: 'Brands', link: '/brand-list', icon: 'ti ti-triangles fs-16 me-2' },
-                        { title: 'Units', link: '/units', icon: 'ti ti-brand-unity fs-16 me-2' },
-                        { title: 'Variant Attributes', link: '/varriant-attributes', icon: 'ti ti-checklist fs-16 me-2' },
-                        { title: 'Warranties', link: '/warranty', icon: 'ti ti-certificate fs-16 me-2' },
-                        { title: 'Print Barcode', link: '/barcode', icon: 'ti ti-barcode fs-16 me-2' },
-                        { title: 'Print QR Code', link: '/qrcode', icon: 'ti ti-qrcode fs-16 me-2' },
-                    ]
-                },
-                {
-                    header: 'Stock',
-                    items: [
-                        { title: 'Manage Stock', link: '/manage-stocks', icon: 'ti ti-stack-3 fs-16 me-2' },
-                        { title: 'Stock Adjustment', link: '/stock-adjustment', icon: 'ti ti-stairs-up fs-16 me-2' },
-                        { title: 'Stock Transfer', link: '/stock-transfer', icon: 'ti ti-stack-pop fs-16 me-2' },
-                    ]
-                },
-                {
-                    header: 'Sales',
+                    header: 'ການຈັດການການຈອງ', // Bookings Management
                     items: [
                         {
-                            title: 'Sales',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-layout-grid fs-16 me-2',
-                            submenu: [
-                                { title: 'Online Orders', link: '/online-orders' },
-                                { title: 'POS Orders', link: '/pos-orders' },
-                            ]
+                            title: 'ລາຍການຈອງທັງໝົດ',
+                            link: '/admin/bookings/list',
+                            icon: 'ti ti-calendar-event fs-16 me-2',
                         },
-                        { title: 'Invoices', link: '/invoice', icon: 'ti ti-file-invoice fs-16 me-2' },
-                        { title: 'Sales Return', link: '/sales-returns', icon: 'ti ti-receipt-refund fs-16 me-2' },
-                        { title: 'Quotation', link: '/quotation-list', icon: 'ti ti-files fs-16 me-2' },
                         {
-                            title: 'POS',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-device-laptop fs-16 me-2',
-                            submenu: [
-                                { title: 'POS 1', link: '/pos' },
-                                { title: 'POS 2', link: '/pos-2' },
-                                { title: 'POS 3', link: '/pos-3' },
-                                { title: 'POS 4', link: '/pos-4' },
-                                { title: 'POS 5', link: '/pos-5' },
-                            ]
+                            title: 'ການຊຳລະເງິນ',
+                            link: '/admin/bookings/payments',
+                            icon: 'ti ti-wallet fs-16 me-2',
                         },
                     ]
                 },
                 {
-                    header: 'Promo',
+                    header: 'ການຈັດການລົດ', // Car Management
                     items: [
-                        { title: 'Coupons', link: '/coupons', icon: 'ti ti-ticket fs-16 me-2' },
-                        { title: 'Gift Cards', link: '/gift-cards', icon: 'ti ti-cards fs-16 me-2' },
                         {
-                            title: 'Discount',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-file-percent fs-16 me-2',
-                            submenu: [
-                                { title: 'Discount Plan', link: '/discount-plan' },
-                                { title: 'Discount', link: '/discount' },
-                            ]
+                            title: 'ລາຍການລົດ',
+                            link: '/admin/cars/list',
+                            icon: 'ti ti-car fs-16 me-2',
+                        },
+                        {
+                            title: 'ປະເພດລົດ',
+                            link: '/admin/cars/types',
+                            icon: 'ti ti-category fs-16 me-2',
                         },
                     ]
                 },
                 {
-                    header: 'Purchases',
+                    header: 'ການຈັດລູກຄ້າ', // Customer Management
                     items: [
-                        { title: 'Purchases', link: '/purchase-list', icon: 'ti ti-shopping-bag fs-16 me-2' },
-                        { title: 'Purchase Order', link: '/purchase-order-report', icon: 'ti ti-file-unknown fs-16 me-2' },
-                        { title: 'Purchase Return', link: '/purchase-returns', icon: 'ti ti-file-upload fs-16 me-2' },
+                        {
+                            title: 'ລາຍການລູກຄ້າ',
+                            link: '/admin/customer/list',
+                            icon: 'ti ti-user fs-16 me-2',
+                        },
                     ]
                 },
+                // {
+                //     header: 'ການຈັດການຄົນຂັບ', // Driver Management
+                //     items: [
+                //         {
+                //             title: 'ລາຍຊື່ຄົນຂັບ',
+                //             link: '/admin/drivers/list',
+                //             icon: 'ti ti-id-badge-2 fs-16 me-2',
+                //         },
+                //     ]
+                // },
+                // {
+                //     header: 'ການຈັດການການເງິນ', // Financial Management
+                //     items: [
+                //         {
+                //             title: 'ບັນທຶກລາຍຮັບ-ລາຍຈ່າຍ',
+                //             link: '/admin/finance/add',
+                //             icon: 'ti ti-currency-dollar fs-16 me-2',
+                //         },
+                //         {
+                //             title: 'ລາຍການທຸລະກຳ',
+                //             link: '/admin/finance/transactions',
+                //             icon: 'ti ti-list-details fs-16 me-2',
+                //         },
+                //     ]
+                // },
                 {
-                    header: 'Finance & Accounts',
+                    header: 'ການຈັດການຜູ້ໃຊ້', // User Management
                     items: [
                         {
-                            title: 'Expenses',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-file-stack fs-16 me-2',
-                            submenu: [
-                                { title: 'Expenses', link: '/expense-list' },
-                                { title: 'Expense Category', link: '/expense-category' },
-                            ]
+                            title: 'ລາຍຊື່ຜູ້ໃຊ້',
+                            link: '/admin/users/list',
+                            icon: 'ti ti-users fs-16 me-2',
                         },
                         {
-                            title: 'Income',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-file-pencil fs-16 me-2',
-                            submenu: [
-                                { title: 'Income', link: '/income' },
-                                { title: 'Income Category', link: '/income-category' },
-                            ]
-                        },
-                        { title: 'Bank Accounts', link: '/account-list', icon: 'ti ti-building-bank fs-16 me-2' },
-                        { title: 'Money Transfer', link: '/money-transfer', icon: 'ti ti-moneybag fs-16 me-2' },
-                        { title: 'Balance Sheet', link: '/balance-sheet', icon: 'ti ti-report-money fs-16 me-2' },
-                        { title: 'Trial Balance', link: '/trial-balance', icon: 'ti ti-alert-circle fs-16 me-2' },
-                        { title: 'Cash Flow', link: '/cash-flow', icon: 'ti ti-zoom-money fs-16 me-2' },
-                        { title: 'Account Statement', link: '/account-statement', icon: 'ti ti-file-infinity fs-16 me-2' },
-                    ]
-                },
-                {
-                    header: 'Peoples',
-                    items: [
-                        { title: 'Customers', link: '/customers', icon: 'ti ti-users-group fs-16 me-2' },
-                        { title: 'Billers', link: '/billers', icon: 'ti ti-user-up fs-16 me-2' },
-                        { title: 'Suppliers', link: '/suppliers', icon: 'ti ti-user-dollar fs-16 me-2' },
-                        { title: 'Stores', link: '/store-list', icon: 'ti ti-home-bolt fs-16 me-2' },
-                        { title: 'Warehouses', link: '/warehouse', icon: 'ti ti-archive fs-16 me-2' },
-                    ]
-                },
-                {
-                    header: 'HRM',
-                    items: [
-                        { title: 'Employees', link: '/employees-grid', icon: 'ti ti-user fs-16 me-2' },
-                        { title: 'Departments', link: '/department-grid', icon: 'ti ti-compass fs-16 me-2' },
-                        { title: 'Designation', link: '/designation', icon: 'ti ti-git-merge fs-16 me-2' },
-                        { title: 'Shifts', link: '/shift', icon: 'ti ti-arrows-shuffle fs-16 me-2' },
-                        {
-                            title: 'Attendence',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-user-cog fs-16 me-2',
-                            submenu: [
-                                { title: 'Employee', link: '/attendance-employee' },
-                                { title: 'Admin', link: '/attendance-admin' },
-                            ]
-                        },
-                        {
-                            title: 'Leaves',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-calendar fs-16 me-2',
-                            submenu: [
-                                { title: 'Admin Leaves', link: '/leaves-admin' },
-                                { title: 'Employee Leaves', link: '/leaves-employee' },
-                                { title: 'Leave Types', link: '/leave-types' },
-                            ]
-                        },
-                        { title: 'Holidays', link: '/holidays', icon: 'ti ti-calendar-share fs-16 me-2' },
-                        {
-                            title: 'Payroll',
-                            link: 'javascript:void(0);', // Changed to be a toggle
-                            icon: 'ti ti-file-dollar fs-16 me-2',
-                            submenu: [
-                                { title: 'Employee Salary', link: '/employee-salary' },
-                                { title: 'Payslip', link: '/payslip' },
-                            ]
+                            title: 'ກຳນົດບົດບາດ/ສິດ',
+                            link: '/admin/users/roles-permissions',
+                            icon: 'ti ti-shield-check fs-16 me-2',
                         },
                     ]
                 },
                 {
-                    header: 'Reports',
+                    header: 'ລາຍງານ', // Reports
                     items: [
                         {
-                            title: 'Sales Report',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-chart-bar fs-16 me-2',
-                            submenu: [
-                                { title: 'Sales Report', link: '/sales-report' },
-                                { title: 'Best Seller', link: '/best-seller' },
-                            ]
-                        },
-                        { title: 'Purchase report', link: '/purchase-report', icon: 'ti ti-chart-pie-2 fs-16 me-2' },
-                        {
-                            title: 'Inventory Report',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-triangle-inverted fs-16 me-2',
-                            submenu: [
-                                { title: 'Inventory Report', link: '/inventory-report' },
-                                { title: 'Stock History', link: '/stock-history' },
-                                { title: 'Sold Stock', link: '/sold-stock' },
-                            ]
-                        },
-                        { title: 'Invoice Report', link: '/invoice-report', icon: 'ti ti-businessplan fs-16 me-2' },
-                        {
-                            title: 'Supplier Report',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-user-star fs-16 me-2',
-                            submenu: [
-                                { title: 'Supplier Report', link: '/supplier-report' },
-                                { title: 'Supplier Due Report', link: '/supplier-due-report' },
-                            ]
+                            title: 'ລາຍງານການຈອງ',
+                            link: '/admin/reports/bookings',
+                            icon: 'ti ti-report-money fs-16 me-2',
                         },
                         {
-                            title: 'Customer Report',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-report fs-16 me-2',
-                            submenu: [
-                                { title: 'Customer Report', link: '/customer-report' },
-                                { title: 'Customer Due Report', link: '/customer-due-report' },
-                            ]
+                            title: 'ລາຍງານສະຖານະລົດ',
+                            link: '/admin/reports/car-status',
+                            icon: 'ti ti-car-off fs-16 me-2',
                         },
-                        {
-                            title: 'Product Report',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-report-analytics fs-16 me-2',
-                            submenu: [
-                                { title: 'Product Report', link: '/product-report' },
-                                { title: 'Product Expiry Report', link: '/product-expiry-report' },
-                                { title: 'Product Quantity Alert', link: '/product-quantity-alert' },
-                            ]
-                        },
-                        { title: 'Expense Report', link: '/expense-report', icon: 'ti ti-file-vector fs-16 me-2' },
-                        { title: 'Income Report', link: '/income-report', icon: 'ti ti-chart-ppf fs-16 me-2' },
-                        { title: 'Tax Report', link: '/tax-reports', icon: 'ti ti-chart-dots-2 fs-16 me-2' },
-                        { title: 'Profit & Loss', link: '/profit-and-loss', icon: 'ti ti-chart-donut fs-16 me-2' },
-                        { title: 'Annual Report', link: '/annual-report', icon: 'ti ti-report-search fs-16 me-2' },
+                        // {
+                        //     title: 'ລາຍງານການຊຳລະເງິນ',
+                        //     link: '/admin/reports/payments',
+                        //     icon: 'ti ti-receipt-2 fs-16 me-2',
+                        // },
+                        // {
+                        //     title: 'ລາຍງານລາຍຮັບ-ລາຍຈ່າຍ',
+                        //     link: '/admin/reports/finance',
+                        //     icon: 'ti ti-trending-up fs-16 me-2',
+                        // },
                     ]
                 },
                 {
-                    header: 'Content (CMS)',
+                    header: 'ຕັ້ງຄ່າ', // Settings
                     items: [
                         {
-                            title: 'Pages',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-page-break fs-16 me-2',
-                            submenu: [
-                                { title: 'Pages', link: '/pages' },
-                            ]
-                        },
-                        {
-                            title: 'Blog',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-wallpaper fs-16 me-2',
-                            submenu: [
-                                { title: 'All Blog', link: '/all-blog' },
-                                { title: 'Blog Tags', link: '/blog-tag' },
-                                { title: 'Categories', link: '/blog-categories' },
-                                { title: 'Blog Comments', link: '/blog-comments' },
-                            ]
-                        },
-                        {
-                            title: 'Location',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-map-pin fs-16 me-2',
-                            submenu: [
-                                { title: 'Countries', link: '/countries' },
-                                { title: 'States', link: '/states' },
-                                { title: 'Cities', link: '/cities' },
-                            ]
-                        },
-                        { title: 'Testimonials', link: '/testimonials', icon: 'ti ti-star fs-16 me-2' },
-                        { title: 'FAQ', link: '/faq', icon: 'ti ti-help-circle fs-16 me-2' },
-                    ]
-                },
-                {
-                    header: 'User Management',
-                    items: [
-                        { title: 'Users', link: '/users', icon: 'ti ti-shield-up fs-16 me-2' },
-                        { title: 'Roles & Permissions', link: '/roles-permissions', icon: 'ti ti-jump-rope fs-16 me-2' },
-                        { title: 'Delete Account Request', link: '/delete-account', icon: 'ti ti-trash-x fs-16 me-2' },
-                    ]
-                },
-                {
-                    header: 'Pages',
-                    items: [
-                        { title: 'Profile', link: '/profile', icon: 'ti ti-user-circle fs-16 me-2' },
-                        {
-                            title: 'Authentication',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-shield fs-16 me-2',
-                            submenu: [
-                                {
-                                    title: 'Login',
-                                    link: 'javascript:void(0);',
-                                    submenuTwo: true,
-                                    submenu: [
-                                        { title: 'Cover', link: '/signin' },
-                                        { title: 'Illustration', link: '/signin-2' },
-                                        { title: 'Basic', link: '/signin-3' },
-                                    ]
-                                },
-                                {
-                                    title: 'Register',
-                                    link: 'javascript:void(0);',
-                                    submenuTwo: true,
-                                    submenu: [
-                                        { title: 'Cover', link: '/register' },
-                                        { title: 'Illustration', link: '/register-2' },
-                                        { title: 'Basic', link: '/register-3' },
-                                    ]
-                                },
-                                {
-                                    title: 'Forgot Password',
-                                    link: 'javascript:void(0);',
-                                    submenuTwo: true,
-                                    submenu: [
-                                        { title: 'Cover', link: '/forgot-password' },
-                                        { title: 'Illustration', link: '/forgot-password-2' },
-                                        { title: 'Basic', link: '/forgot-password-3' },
-                                    ]
-                                },
-                                {
-                                    title: 'Reset Password',
-                                    link: 'javascript:void(0);',
-                                    submenuTwo: true,
-                                    submenu: [
-                                        { title: 'Cover', link: '/reset-password' },
-                                        { title: 'Illustration', link: '/reset-password-2' },
-                                        { title: 'Basic', link: '/reset-password-3' },
-                                    ]
-                                },
-                                {
-                                    title: 'Email Verification',
-                                    link: 'javascript:void(0);',
-                                    submenuTwo: true,
-                                    submenu: [
-                                        { title: 'Cover', link: '/email-verification' },
-                                        { title: 'Illustration', link: '/email-verification-2' },
-                                        { title: 'Basic', link: '/email-verification-3' },
-                                    ]
-                                },
-                                {
-                                    title: '2 Step Verification',
-                                    link: 'javascript:void(0);',
-                                    submenuTwo: true,
-                                    submenu: [
-                                        { title: 'Cover', link: '/two-step-verification' },
-                                        { title: 'Illustration', link: '/two-step-verification-2' },
-                                        { title: 'Basic', link: '/two-step-verification-3' },
-                                    ]
-                                },
-                                { title: 'Lock Screen', link: '/lock-screen' },
-                            ]
-                        },
-                        {
-                            title: 'Error Pages',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-file-x fs-16 me-2',
-                            submenu: [
-                                { title: '404 Error', link: '/error-404' },
-                                { title: '500 Error', link: '/error-500' },
-                            ]
-                        },
-                        { title: 'Blank Page', link: '/blank-page', icon: 'ti ti-file fs-16 me-2' },
-                        { title: 'Pricing', link: '/pricing', icon: 'ti ti-currency-dollar fs-16 me-2' },
-                        { title: 'Coming Soon', link: '/coming-soon', icon: 'ti ti-send fs-16 me-2' },
-                        { title: 'Under Maintenance', link: '/under-maintenance', icon: 'ti ti-alert-triangle fs-16 me-2' },
-                    ]
-                },
-                {
-                    header: 'Settings',
-                    items: [
-                        {
-                            title: 'General Settings',
-                            link: 'javascript:void(0);',
+                            title: 'ການຕັ້ງຄ່າທົ່ວໄປຂອງລະບົບ',
+                            link: '/admin/settings',
                             icon: 'ti ti-settings fs-16 me-2',
-                            submenu: [
-                                { title: 'Profile', link: '/general-settings' },
-                                { title: 'Security', link: '/security-settings' },
-                                { title: 'Notifications', link: '/notification' },
-                                { title: 'Connected Apps', link: '/connected-apps' },
-                            ]
-                        },
-                        {
-                            title: 'Website Settings',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-world fs-16 me-2',
-                            submenu: [
-                                { title: 'System Settings', link: '/system-settings' },
-                                { title: 'Company Settings', link: '/company-settings' },
-                                { title: 'Localization', link: '/localization-settings' },
-                                { title: 'Prefixes', link: '/prefixes' },
-                                { title: 'Preference', link: '/preference' },
-                                { title: 'Appearance', link: '/appearance' },
-                                { title: 'Social Authentication', link: '/social-authentication' },
-                                { title: 'Language', link: '/language-settings' },
-                            ]
-                        },
-                        {
-                            title: 'App Settings',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-device-mobile fs-16 me-2',
-                            submenu: [
-                                {
-                                    title: 'Invoice',
-                                    link: 'javascript:void(0);',
-                                    submenuTwo: true,
-                                    submenu: [
-                                        { title: 'Invoice Settings', link: '/invoice-settings' },
-                                        { title: 'Invoice Template', link: '/invoice-template' },
-                                    ]
-                                },
-                                { title: 'Printer', link: '/printer-settings' },
-                                { title: 'POS', link: '/pos-settings' },
-                                { title: 'Custom Fields', link: '/custom-fields' },
-                            ]
-                        },
-                        {
-                            title: 'System Settings',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-device-desktop fs-16 me-2',
-                            submenu: [
-                                {
-                                    title: 'Email',
-                                    link: 'javascript:void(0);',
-                                    submenuTwo: true,
-                                    submenu: [
-                                        { title: 'Email Settings', link: '/email-settings' },
-                                        { title: 'Email Template', link: '/email-template' },
-                                    ]
-                                },
-                                {
-                                    title: 'SMS',
-                                    link: 'javascript:void(0);',
-                                    submenuTwo: true,
-                                    submenu: [
-                                        { title: 'SMS Settings', link: '/sms-settings' },
-                                        { title: 'SMS Template', link: '/sms-template' },
-                                    ]
-                                },
-                                { title: 'OTP', link: '/otp-settings' },
-                                { title: 'GDPR Cookies', link: '/gdpr-settings' },
-                            ]
-                        },
-                        {
-                            title: 'Financial Settings',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-settings-dollar fs-16 me-2',
-                            submenu: [
-                                { title: 'Payment Gateway', link: '/payment-gateway-settings' },
-                                { title: 'Bank Accounts', link: '/bank-settings-grid' },
-                                { title: 'Tax Rates', link: '/tax-rates' },
-                                { title: 'Currencies', link: '/currency-settings' },
-                            ]
-                        },
-                        {
-                            title: 'Other Settings',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-settings-2 fs-16 me-2',
-                            submenu: [
-                                { title: 'Storage', link: '/storage-settings' },
-                                { title: 'Ban IP Address', link: '/ban-ip-address' },
-                            ]
-                        },
-                        { title: 'Logout', link: '/signin', icon: 'ti ti-logout fs-16 me-2' },
-                    ]
-                },
-                {
-                    header: 'UI Interface',
-                    items: [
-                        {
-                            title: 'Base UI',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-vector-bezier fs-16 me-2',
-                            submenu: [
-                                { title: 'Alerts', link: '/ui-alerts' },
-                                { title: 'Accordion', link: '/ui-accordion' },
-                                { title: 'Avatar', link: '/ui-avatar' },
-                                { title: 'Badges', link: '/ui-badges' },
-                                { title: 'Border', link: '/ui-borders' },
-                                { title: 'Buttons', link: '/ui-buttons' },
-                                { title: 'Button Group', link: '/ui-buttons-group' },
-                                { title: 'Breadcrumb', link: '/ui-breadcrumb' },
-                                { title: 'Card', link: '/ui-cards' },
-                                { title: 'Carousel', link: '/ui-carousel' },
-                                { title: 'Colors', link: '/ui-colors' },
-                                { title: 'Dropdowns', link: '/ui-dropdowns' },
-                                { title: 'Grid', link: '/ui-grid' },
-                                { title: 'Images', link: '/ui-images' },
-                                { title: 'Lightbox', link: '/ui-lightbox' },
-                                { title: 'Media', link: '/ui-media' },
-                                { title: 'Modals', link: '/ui-modals' },
-                                { title: 'Offcanvas', link: '/ui-offcanvas' },
-                                { title: 'Pagination', link: '/ui-pagination' },
-                                { title: 'Popovers', link: '/ui-popovers' },
-                                { title: 'Progress', link: '/ui-progress' },
-                                { title: 'Placeholders', link: '/ui-placeholders' },
-                                { title: 'Range Slider', link: '/ui-rangeslider' },
-                                { title: 'Spinner', link: '/ui-spinner' },
-                                { title: 'Sweet Alerts', link: '/ui-sweetalerts' },
-                                { title: 'Tabs', link: '/ui-nav-tabs' },
-                                { title: 'Toasts', link: '/ui-toasts' },
-                                { title: 'Tooltips', link: '/ui-tooltips' },
-                                { title: 'Typography', link: '/ui-typography' },
-                                { title: 'Video', link: '/ui-video' },
-                                { title: 'Sortable', link: '/ui-sortable' },
-                                { title: 'Swiperjs', link: '/ui-swiperjs' },
-                            ]
-                        },
-                        {
-                            title: 'Advanced UI',
-                            link: 'javascript:void(0);',
-                            icon: 'feather-layers',
-                            submenu: [
-                                { title: 'Ribbon', link: '/ui-ribbon' },
-                                { title: 'Clipboard', link: '/ui-clipboard' },
-                                { title: 'Drag & Drop', link: '/ui-drag-drop' },
-                                { title: 'Range Slider', link: '/ui-rangeslider' },
-                                { title: 'Rating', link: '/ui-rating' },
-                                { title: 'Text Editor', link: '/ui-text-editor' },
-                                { title: 'Counter', link: '/ui-counter' },
-                                { title: 'Scrollbar', link: '/ui-scrollbar' },
-                                { title: 'Sticky Note', link: '/ui-stickynote' },
-                                { title: 'Timeline', link: '/ui-timeline' },
-                            ]
-                        },
-                        {
-                            title: 'Charts',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-chart-infographic fs-16 me-2',
-                            submenu: [
-                                { title: 'Apex Charts', link: '/chart-apex' },
-                                { title: 'Chart C3', link: '/chart-c3' },
-                                { title: 'Chart Js', link: '/chart-js' },
-                                { title: 'Morris Charts', link: '/chart-morris' },
-                                { title: 'Flot Charts', link: '/chart-flot' },
-                                { title: 'Peity Charts', link: '/chart-peity' },
-                            ]
-                        },
-                        {
-                            title: 'Icons',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-icons fs-16 me-2',
-                            submenu: [
-                                { title: 'Fontawesome Icons', link: '/icon-fontawesome' },
-                                { title: 'Feather Icons', link: '/icon-feather' },
-                                { title: 'Ionic Icons', link: '/icon-ionic' },
-                                { title: 'Material Icons', link: '/icon-material' },
-                                { title: 'Pe7 Icons', link: '/icon-pe7' },
-                                { title: 'Simpleline Icons', link: '/icon-simpleline' },
-                                { title: 'Themify Icons', link: '/icon-themify' },
-                                { title: 'Weather Icons', link: '/icon-weather' },
-                                { title: 'Typicon Icons', link: '/icon-typicon' },
-                                { title: 'Flag Icons', link: '/icon-flag' },
-                                { title: 'Tabler Icons', link: '/icon-tabler' },
-                                { title: 'Bootstrap Icons', link: '/icon-bootstrap' },
-                                { title: 'Remix Icons', link: '/icon-remix' },
-                            ]
-                        },
-                        {
-                            title: 'Forms',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-input-search fs-16 me-2',
-                            submenu: [
-                                {
-                                    title: 'Form Elements',
-                                    link: 'javascript:void(0);',
-                                    submenuTwo: true,
-                                    submenu: [
-                                        { title: 'Basic Inputs', link: '/form-basic-inputs' },
-                                        { title: 'Checkbox & Radios', link: '/form-checkbox-radios' },
-                                        { title: 'Input Groups', link: '/form-input-groups' },
-                                        { title: 'Grid & Gutters', link: '/form-grid-gutters' },
-                                        { title: 'Form Select', link: '/form-select' },
-                                        { title: 'Input Masks', link: '/form-mask' },
-                                        { title: 'File Uploads', link: '/form-fileupload' },
-                                    ]
-                                },
-                                {
-                                    title: 'Layouts',
-                                    link: 'javascript:void(0);',
-                                    submenuTwo: true,
-                                    submenu: [
-                                        { title: 'Horizontal Form', link: '/form-horizontal' },
-                                        { title: 'Vertical Form', link: '/form-vertical' },
-                                        { title: 'Floating Labels', link: '/form-floating-labels' },
-                                    ]
-                                },
-                                { title: 'Form Validation', link: '/form-validation' },
-                                { title: 'Select2', link: '/form-select2' },
-                                { title: 'Form Wizard', link: '/form-wizard' },
-                                { title: 'Form Picker', link: '/form-pickers' },
-                            ]
-                        },
-                        {
-                            title: 'Tables',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-table fs-16 me-2',
-                            submenu: [
-                                { title: 'Basic Tables', link: '/tables-basic' },
-                                { title: 'Data Table', link: '/data-tables' },
-                            ]
-                        },
-                        {
-                            title: 'Maps',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-map-pin-pin fs-16 me-2',
-                            submenu: [
-                                { title: 'Vector', link: '/maps-vector' },
-                                { title: 'Leaflet', link: '/maps-leaflet' },
-                            ]
-                        },
-                    ]
-                },
-                {
-                    header: 'Help',
-                    items: [
-                        { title: 'Documentation', link: 'javascript:void(0);', icon: 'ti ti-file-text fs-16 me-2' },
-                        { title: 'Changelog', link: 'javascript:void(0);', icon: 'ti ti-exchange fs-16 me-2', badge: { class: 'badge bg-primary badge-xs text-white fs-10 ms-2', text: 'v2.0.9' } },
-                        {
-                            title: 'Multi Level',
-                            link: 'javascript:void(0);',
-                            icon: 'ti ti-menu-2 fs-16 me-2',
-                            submenu: [
-                                { title: 'Level 1.1', link: 'javascript:void(0);' },
-                                {
-                                    title: 'Level 1.2',
-                                    link: 'javascript:void(0);',
-                                    submenuTwo: true,
-                                    submenu: [
-                                        { title: 'Level 2.1', link: 'javascript:void(0);' },
-                                        {
-                                            title: 'Level 2.2',
-                                            link: 'javascript:void(0);',
-                                            submenuTwo: true,
-                                            submenuThree: true,
-                                            submenu: [
-                                                { title: 'Level 3.1', link: 'javascript:void(0);' },
-                                                { title: 'Level 3.2', link: 'javascript:void(0);' },
-                                            ]
-                                        },
-                                    ]
-                                },
-                            ]
                         },
                     ]
                 },
             ]
+            
         }
     },
     methods: {
@@ -987,5 +408,8 @@ export default {
 /* Hide scrollbar for Webkit browsers (Chrome, Safari) */
 .sidebar-inner::-webkit-scrollbar {
     display: none;
+}
+.sidebar .sidebar-menu > ul > li, .settings-sidebar .sidebar-menu > ul > li {
+    margin-bottom: 0px
 }
 </style>

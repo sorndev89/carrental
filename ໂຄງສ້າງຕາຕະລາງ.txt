@@ -1,0 +1,127 @@
+﻿ນີ້ຄືໂຄງສ້າງຖານຂໍ້ມູນທີ່ສົມບູນແບບສຳລັບລະບົບເຊົ່າລົດຂອງທ່ານ, ຈັດລຽງຢູ່ໃນຮູບແບບ Plain Text ເພື່ອໃຫ້ທ່ານສາມາດເກັບຮັກສາໄວ້ເປັນໄຟລ໌ດຽວໄດ້ງ່າຍ.
+ໂຄງສ້າງຖານຂໍ້ມູນລະບົບເຊົ່າລົດ (ລວມທັງໝົດ)
+1. ຕາຕະລາງ Users
+* ຄຳອະທິບາຍ: ເກັບຂໍ້ມູນຜູ້ໃຊ້ທັງໝົດໃນລະບົບ, ລວມມີລູກຄ້າ, ຜູ້ບໍລິຫານ (admin), ແລະພະນັກງານ (staff).
+* ຄໍລຳສຳຄັນ:
+   * user_id (Primary Key): ລະຫັດຜູ້ໃຊ້ທີ່ບໍ່ຊໍ້າກັນ.
+   * first_name, last_name: ຊື່ ແລະ ນາມສະກຸນ.
+   * gender: ເພດ (Male, Female, Other).
+   * date_of_birth: ວັນເດືອນປີເກີດ.
+   * phone_number (UNIQUE): ເບີໂທລະສັບ, ໃຊ້ສຳລັບການເຂົ້າສູ່ລະບົບ ແລະ ຕິດຕໍ່, ຕ້ອງບໍ່ຊໍ້າກັນ.
+   * email (UNIQUE): ອີເມວ, ໃຊ້ສຳລັບການເຂົ້າສູ່ລະບົບ, ຕ້ອງບໍ່ຊໍ້າກັນ.
+   * password_hash: ລະຫັດຜ່ານທີ່ຖືກເຂົ້າລະຫັດ (Hash).
+   * profile_image_url: URL ຂອງຮູບໂປຣໄຟລ໌ຂອງຜູ້ໃຊ້.
+   * address: ທີ່ຢູ່.
+   * city: ເມືອງ.
+   * province: ແຂວງ.
+   * zip_code: ລະຫັດໄປສະນີ.
+   * created_at: ວັນທີສ້າງບັນຊີ.
+   * updated_at: ວັນທີອັບເດດຂໍ້ມູນລ່າສຸດ.
+2. ຕາຕະລາງ CarTypes
+* ຄຳອະທິບາຍ: ເກັບປະເພດຂອງລົດຕ່າງໆ ເພື່ອຈັດໝວດໝູ່ລົດໃຫ້ເປັນລະບົບ.
+* ຄໍລຳສຳຄັນ:
+   * type_id (Primary Key): ລະຫັດປະເພດລົດ.
+   * type_name: ຊື່ປະເພດລົດ (ຕົວຢ່າງ: Sedan, SUV, Van).
+   * description: ລາຍລະອຽດຂອງປະເພດລົດ.
+3. ຕາຕະລາງ Cars
+* ຄຳອະທິບາຍ: ເກັບຂໍ້ມູນລາຍລະອຽດຂອງລົດແຕ່ລະຄັນທີ່ມີໃຫ້ເຊົ່າ.
+* ຄໍລຳສຳຄັນ:
+   * car_id (Primary Key): ລະຫັດລົດ.
+   * type_id (Foreign Key): ເຊື່ອມຕໍ່ກັບ CarTypes, ບອກປະເພດຂອງລົດ.
+   * make: ຍີ່ຫໍ້ (ຕົວຢ່າງ: Toyota, Honda).
+   * model: ລຸ້ນ (ຕົວຢ່າງ: Camry, Civic).
+   * year: ປີຜະລິດ.
+   * license_plate (UNIQUE): ປ້າຍທະບຽນລົດ, ຕ້ອງບໍ່ຊໍ້າກັນ.
+   * daily_rate: ລາຄາເຊົ່າຕໍ່ມື້.
+   * monthly_rate: ລາຄາເຊົ່າຕໍ່ເດືອນ (ຖ້າມີແຜນການເຊົ່າເປັນເດືອນ).
+   * current_location: ສະຖານທີ່ປະຈຸບັນຂອງລົດ.
+   * status: ສະຖານະຂອງລົດ (ວ່າງ available, ໃຫ້ເຊົ່າ rented, ບຳລຸງຮັກສາ maintenance).
+   * image_url: URL ຂອງຮູບພາບລົດ.
+4. ຕາຕະລາງ Drivers
+* ຄຳອະທິບາຍ: ເກັບຂໍ້ມູນຂອງຄົນຂັບສຳລັບບໍລິການເຊົ່າລົດພ້ອມຄົນຂັບ.
+* ຄໍລຳສຳຄັນ:
+   * driver_id (Primary Key): ລະຫັດຄົນຂັບ.
+   * first_name, last_name: ຊື່ ແລະ ນາມສະກຸນຄົນຂັບ.
+   * gender: ເພດ (Male, Female, Other).
+   * date_of_birth: ວັນເດືອນປີເກີດ.
+   * phone_number (UNIQUE): ເບີໂທລະສັບຄົນຂັບ, ຕ້ອງບໍ່ຊໍ້າກັນ.
+   * email (UNIQUE): ອີເມວຄົນຂັບ, ຕ້ອງບໍ່ຊໍ້າກັນ.
+   * license_number (UNIQUE): ເລກໃບຂັບຂີ່, ຕ້ອງບໍ່ຊໍ້າກັນ.
+   * license_expiry_date: ວັນໝົດອາຍຸໃບຂັບຂີ່.
+   * driver_image_url: URL ຂອງຮູບພາບຄົນຂັບ.
+   * address: ທີ່ຢູ່.
+   * city: ເມືອງ.
+   * province: ແຂວງ.
+   * zip_code: ລະຫັດໄປສະນີ.
+   * is_available: ສະຖານະວ່າງຂອງຄົນຂັບ (True/False).
+   * created_at: ວັນທີເພີ່ມຂໍ້ມູນ.
+   * updated_at: ວັນທີອັບເດດຂໍ້ມູນລ່າສຸດ.
+5. ຕາຕະລາງ roles
+* ຄຳອະທິບາຍ: ເກັບບົດບາດຕ່າງໆທີ່ຜູ້ໃຊ້ສາມາດມີໄດ້ໃນລະບົບ (ເຊັ່ນ: 'admin', 'staff', 'customer'). ຖືກຈັດການໂດຍ Spatie Laravel Permission.
+* ຄໍລຳສຳຄັນ:
+   * id (Primary Key): ລະຫັດບົດບາດ.
+   * name (UNIQUE): ຊື່ບົດບາດ.
+   * guard_name: ຊື່ Guard (ເຊັ່ນ: 'web', 'api') ສຳລັບ Laravel Authentication.
+   * created_at: ວັນທີສ້າງ.
+   * updated_at: ວັນທີອັບເດດ.
+6. ຕາຕະລາງ permissions
+* ຄຳອະທິບາຍ: ເກັບສິດອະນຸຍາດຕ່າງໆທີ່ສາມາດມອບໃຫ້ບົດບາດ ຫຼື ຜູ້ໃຊ້ແຕ່ລະຄົນໄດ້ (ເຊັ່ນ: 'create car', 'edit car', 'view bookings', 'manage users'). ຖືກຈັດການໂດຍ Spatie Laravel Permission.
+* ຄໍລຳສຳຄັນ:
+   * id (Primary Key): ລະຫັດສິດອະນຸຍາດ.
+   * name (UNIQUE): ຊື່ສິດອະນຸຍາດ.
+   * guard_name: ຊື່ Guard (ເຊັ່ນ: 'web', 'api').
+   * created_at: ວັນທີສ້າງ.
+   * updated_at: ວັນທີອັບເດດ.
+7. ຕາຕະລາງ model_has_roles
+* ຄຳອະທິບາຍ: ຕາຕະລາງເຊື່ອມໂຍງ (Pivot Table) ທີ່ບອກວ່າຜູ້ໃຊ້ຄົນໃດມີບົດບາດຫຍັງແດ່. ຖືກສ້າງ ແລະ ຈັດການໂດຍ Spatie Laravel Permission.
+* ຄໍລຳສຳຄັນ:
+   * role_id (Foreign Key): ເຊື່ອມຕໍ່ກັບ roles.id.
+   * model_type: ປະເພດຂອງ Model ທີ່ເຊື່ອມໂຍງ (ເຊັ່ນ: App\Models\User).
+   * model_id (Foreign Key): ລະຫັດຂອງ Model ທີ່ເຊື່ອມໂຍງ (ເຊື່ອມຕໍ່ກັບ users.user_id).
+8. ຕາຕະລາງ role_has_permissions
+* ຄຳອະທິບາຍ: ຕາຕະລາງເຊື່ອມໂຍງ (Pivot Table) ທີ່ກຳນົດວ່າແຕ່ລະບົດບາດມີສິດອະນຸຍາດຫຍັງແດ່. ຖືກສ້າງ ແລະ ຈັດການໂດຍ Spatie Laravel Permission.
+* ຄໍລຳສຳຄັນ:
+   * permission_id (Foreign Key): ເຊື່ອມຕໍ່ກັບ permissions.id.
+   * role_id (Foreign Key): ເຊື່ອມຕໍ່ກັບ roles.id.
+9. ຕາຕະລາງ model_has_permissions (ທາງເລືອກ)
+* ຄຳອະທິບາຍ: ຕາຕະລາງເຊື່ອມໂຍງ (Pivot Table) ນີ້ອະນຸຍາດໃຫ້ມອບສິດອະນຸຍາດສະເພາະໃຫ້ກັບຜູ້ໃຊ້ແຕ່ລະຄົນໂດຍກົງ, ໂດຍບໍ່ຕ້ອງຜ່ານບົດບາດ. ຖືກສ້າງ ແລະ ຈັດການໂດຍ Spatie Laravel Permission.
+* ຄໍລຳສຳຄັນ:
+   * permission_id (Foreign Key): ເຊື່ອມຕໍ່ກັບ permissions.id.
+   * model_type: ປະເພດຂອງ Model ທີ່ເຊື່ອມໂຍງ.
+   * model_id (Foreign Key): ລະຫັດຂອງ Model ທີ່ເຊື່ອມໂຍງ.
+10. ຕາຕະລາງ Bookings
+* ຄຳອະທິບາຍ: ເກັບຂໍ້ມູນການຈອງລົດແຕ່ລະລາຍການ. ນີ້ແມ່ນຕາຕະລາງຫຼັກທີ່ເຊື່ອມຕໍ່ຜູ້ໃຊ້, ລົດ, ແລະຄົນຂັບ (ຖ້າມີ).
+* ຄໍລຳສຳຄັນ:
+   * booking_id (Primary Key): ລະຫັດການຈອງ.
+   * user_id (Foreign Key): ລະຫັດຜູ້ໃຊ້ທີ່ຈອງ (ເຊື່ອມຕໍ່ກັບ Users).
+   * car_id (Foreign Key): ລະຫັດລົດທີ່ຖືກຈອງ (ເຊື່ອມຕໍ່ກັບ Cars).
+   * driver_id (Foreign Key, NULLABLE): ລະຫັດຄົນຂັບທີ່ຖືກມອບໝາຍ (ຖ້າຈອງພ້ອມຄົນຂັບ).
+   * pickup_date: ວັນທີຮັບລົດ.
+   * return_date: ວັນທີສົ່ງຄືນລົດ.
+   * pickup_location: ສະຖານທີ່ຮັບລົດ.
+   * return_location: ສະຖານທີ່ສົ່ງຄືນລົດ.
+   * total_price: ລາຄາລວມຂອງການຈອງ.
+   * booking_status: ສະຖານະຂອງການຈອງ (ລໍຖ້າ pending, ຢືນຢັນແລ້ວ confirmed, ຍົກເລີກ cancelled, ສໍາເລັດ completed).
+   * payment_status: ສະຖານະການຊຳລະເງິນ (ລໍຖ້າ pending, ຊຳລະແລ້ວ paid, ຄືນເງິນ refunded).
+   * qr_code_data: ຂໍ້ມູນສຳລັບສ້າງ QR Code ຊຳລະເງິນ.
+   * booking_date: ວັນທີຈອງ.
+11. ຕາຕະລາງ Payments
+* ຄຳອະທິບາຍ: ເກັບບັນທຶກທຸລະກຳການຊຳລະເງິນທີ່ກ່ຽວຂ້ອງກັບການຈອງ.
+* ຄໍລຳສຳຄັນ:
+   * payment_id (Primary Key): ລະຫັດການຊຳລະເງິນ.
+   * booking_id (Foreign Key): ເຊື່ອມຕໍ່ກັບ Bookings.
+   * amount: ຈຳນວນເງິນທີ່ຊຳລະ.
+   * payment_method: ວິທີຊຳລະ (ຕົວຢ່າງ: QR Code, Bank Transfer).
+   * transaction_id (UNIQUE): ລະຫັດທຸລະກຳຈາກທະນາຄານ/ລະບົບຊຳລະເງິນ.
+   * payment_date: ວັນທີຊຳລະເງິນ.
+   * status: ສະຖານະການຊຳລະເງິນ (ສຳເລັດ success, ລົ້ມເຫຼວ failed, ລໍຖ້າ pending).
+12. ຕາຕະລາງ Transactions
+* ຄຳອະທິບາຍ: ລາຍຮັບ-ລາຍຈ່າຍ: ເກັບບັນທຶກລາຍຮັບ ແລະ ລາຍຈ່າຍທັງໝົດຂອງທຸລະກິດ, ລວມທັງລາຍຮັບຈາກການຈອງ ແລະ ລາຍຈ່າຍອື່ນໆ.
+* ຄໍລຳສຳຄັນ:
+   * transaction_id (Primary Key): ລະຫັດລາຍຮັບ-ລາຍຈ່າຍ.
+   * booking_id (Foreign Key, NULLABLE): ເຊື່ອມຕໍ່ກັບ Bookings (ຖ້າເປັນລາຍຮັບຈາກການຈອງ).
+   * type: ປະເພດທຸລະກຳ (ລາຍຮັບ income, ລາຍຈ່າຍ expense).
+   * amount: ຈຳນວນເງິນ.
+   * description: ລາຍລະອຽດຂອງລາຍຮັບ ຫຼື ລາຍຈ່າຍ.
+   * transaction_date: ວັນທີເກີດທຸລະກຳ.
+   * recorded_by (Foreign Key): ລະຫັດຜູ້ໃຊ້ທີ່ບັນທຶກທຸລະກຳ (ເຊື່ອມຕໍ່ກັບ Users - ຜູ້ບໍລິຫານ/ພະນັກງານ).

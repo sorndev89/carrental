@@ -1,0 +1,1 @@
+<template><div>User Register</div></template>

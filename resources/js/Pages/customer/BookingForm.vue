@@ -1,0 +1,1 @@
+<template><div>Booking Form</div></template>
