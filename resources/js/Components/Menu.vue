@@ -12,13 +12,14 @@
                 <!-- <img :src="url + '/assets/img/logo-small.png'" alt="Img"> -->
             </router-link>
             <a id="toggle_btn" href="javascript:void(0);" @click="toggleSidebar()">
-                <i data-feather="chevrons-left"></i>
+             
+                <vue-feather type="chevrons-left"></vue-feather>
             </a>
         </div>
         <!-- /Logo -->
         <div class="modern-profile p-3 pb-0">
             <div class="text-center rounded bg-light p-3 mb-4 user-profile">
-                <div class="avatar avatar-lg online mb-3">
+                <div class="avatar avatar-lg online mb-3"> 
                     <img :src="url + '/assets/img/customer/customer15.jpg'" alt="Img" class="img-fluid rounded-circle">
                 </div>
                 <h6 class="fs-14 fw-bold mb-1">Adrian Herman</h6>
@@ -203,21 +204,21 @@ export default {
                 //         },
                 //     ]
                 // },
-                // {
-                //     header: 'ການຈັດການການເງິນ', // Financial Management
-                //     items: [
-                //         {
-                //             title: 'ບັນທຶກລາຍຮັບ-ລາຍຈ່າຍ',
-                //             link: '/admin/finance/add',
-                //             icon: 'ti ti-currency-dollar fs-16 me-2',
-                //         },
-                //         {
-                //             title: 'ລາຍການທຸລະກຳ',
-                //             link: '/admin/finance/transactions',
-                //             icon: 'ti ti-list-details fs-16 me-2',
-                //         },
-                //     ]
-                // },
+                {
+                    header: 'ການຈັດການການເງິນ', // Financial Management
+                    items: [
+                        // {
+                        //     title: 'ບັນທຶກລາຍຮັບ-ລາຍຈ່າຍ',
+                        //     link: '/admin/finance/add',
+                        //     icon: 'ti ti-currency-dollar fs-16 me-2',
+                        // },
+                        {
+                            title: 'ລາຍການທຸລະກຳ',
+                            link: '/admin/finance/transactions',
+                            icon: 'ti ti-list-details fs-16 me-2',
+                        },
+                    ]
+                },
                 {
                     header: 'ການຈັດການຜູ້ໃຊ້', // User Management
                     items: [

@@ -1,0 +1,139 @@
+✦ ການເພີ່ມ sessionStorage ເຂົ້າໄປໃນຂະບວນການຈັດການ Token ແລະ User ແມ່ນເພື່ອຮອງຮັບຟັງຊັນ "Remember me" ທີ່ເຈົ້າໄດ້ຮ້ອງຂໍ,
+  ໂດຍມີເປົ້າໝາຍເພື່ອໃຫ້ຜູ້ໃຊ້ມີທາງເລືອກໃນການຮັກສາສະຖານະການເຂົ້າສູ່ລະບົບຂອງເຂົາເຈົ້າ.
+
+
+  ນີ້ແມ່ນຄໍາອະທິບາຍລະອຽດຂອງຂັ້ນຕອນ ແລະເຫດຜົນ:
+
+  1. ເຂົ້າໃຈຄວາມແຕກຕ່າງລະຫວ່າງ localStorage ແລະ sessionStorage
+
+
+   * `localStorage`:
+       * ເປັນບ່ອນເກັບຂໍ້ມູນທີ່ ຄົງຢູ່ຖາວອນ (persistent storage).
+       * ຂໍ້ມູນທີ່ເກັບໄວ້ໃນ localStorage ຈະ ບໍ່ຖືກລຶບ ເຖິງແມ່ນວ່າຜູ້ໃຊ້ຈະປິດ Browser ຫຼືປິດຄອມພິວເຕີແລ້ວເປີດໃໝ່. ມັນຈະຍັງຄົງຢູ່ຈົນກວ່າຈະຖືກລຶບດ້ວຍມື ຫຼື ດ້ວຍ Code.
+       * ເໝາະສຳລັບການເກັບຂໍ້ມູນທີ່ຕ້ອງການໃຫ້ຄົງຢູ່ດົນນານ, ເຊັ່ນ: ການເຂົ້າສູ່ລະບົບແບບ "Remember me".
+
+
+   * `sessionStorage`:
+       * ເປັນບ່ອນເກັບຂໍ້ມູນທີ່ ຄົງຢູ່ຊົ່ວຄາວ (session-based storage).
+       * ຂໍ້ມູນທີ່ເກັບໄວ້ໃນ sessionStorage ຈະ ຖືກລຶບອອກທັນທີ ເມື່ອຜູ້ໃຊ້ປິດ Tab ຫຼື Window ຂອງ Browser ນັ້ນໆ. ຖ້າຜູ້ໃຊ້ເປີດ Tab ໃໝ່, ຂໍ້ມູນໃນ sessionStorage ຂອງ
+         Tab ເກົ່າຈະບໍ່ຖືກໂອນໄປຫາ Tab ໃໝ່.
+       * ເໝາະສຳລັບການເກັບຂໍ້ມູນທີ່ຕ້ອງການໃຫ້ຄົງຢູ່ສະເພາະໃນ Session ປັດຈຸບັນເທົ່ານັ້ນ, ເຊັ່ນ: ຂໍ້ມູນການເຂົ້າສູ່ລະບົບຊົ່ວຄາວທີ່ບໍ່ຕ້ອງການໃຫ້ຈື່ໄວ້.
+
+
+  2. ເຫດຜົນທີ່ຕ້ອງໃຊ້ທັງສອງຢ່າງສຳລັບ "Remember me"
+
+
+  ເມື່ອຜູ້ໃຊ້ເລືອກ "Remember me" (ຈື່ຂ້ອຍໄວ້), ພວກເຂົາຄາດຫວັງວ່າຈະຍັງຄົງເຂົ້າສູ່ລະບົບຢູ່ເຖິງແມ່ນວ່າຈະປິດ Browser ໄປແລ້ວກໍຕາມ. ໃນກໍລະນີນີ້, ພວກເຮົາຈະເກັບ Token ແລະ
+  User Data ໄວ້ໃນ `localStorage`.
+
+
+  ແຕ່ຖ້າຜູ້ໃຊ້ ບໍ່ໄດ້ເລືອກ "Remember me", ພວກເຂົາຄາດຫວັງວ່າເມື່ອປິດ Browser (ຫຼື Tab) ແລ້ວ, Session ຂອງພວກເຂົາຈະສິ້ນສຸດລົງ ແລະຈະຕ້ອງເຂົ້າສູ່ລະບົບໃໝ່ໃນຄັ້ງຕໍ່ໄປ.
+  ໃນກໍລະນີນີ້, ພວກເຮົາຈະເກັບ Token ແລະ User Data ໄວ້ໃນ `sessionStorage`.
+
+
+  ການໃຊ້ທັງສອງຢ່າງເຮັດໃຫ້ລະບົບສາມາດຈັດການກັບຄວາມຕ້ອງການຂອງຜູ້ໃຊ້ໄດ້ຢ່າງຖືກຕ້ອງ:
+
+
+   * ຜູ້ໃຊ້ເລືອກ "Remember me": ຂໍ້ມູນຖືກເກັບໃນ localStorage -> ຢູ່ຄົງຖາວອນ.
+   * ຜູ້ໃຊ້ບໍ່ເລືອກ "Remember me": ຂໍ້ມູນຖືກເກັບໃນ sessionStorage -> ຖືກລຶບເມື່ອປິດ Tab/Browser.
+
+  3. ຂະບວນການໃນ Code (resources/js/Stores/Auth.js)
+
+  3.1. ການຈັດການໃນ login action
+
+
+
+    1 async login(credentials) {
+    2     try {
+    3         const response = await axios.post('/api/auth/login', credentials);
+    4         this.token = response.data.access_token;
+    5         this.user = response.data.user;
+    6 
+    7         // ກວດສອບວ່າຜູ້ໃຊ້ເລືອກ "remember me" ບໍ່
+    8         const storage = credentials.remember ? localStorage : sessionStorage;
+    9 
+   10         // ເກັບ token ແລະ user ໄວ້ໃນ storage ທີ່ເໝາະສົມ
+   11         storage.setItem('token', this.token);
+   12         storage.setItem('user', JSON.stringify(this.user));
+   13 
+   14         return true;
+   15     } catch (error) {
+   16         // ... (ການຈັດການ error)
+   17     }
+   18 }
+
+
+
+   * ເມື່ອ login action ຖືກເອີ້ນ, ມັນຈະຮັບ credentials ເຊິ່ງລວມມີ email, password, ແລະ remember (ຈາກ checkbox).
+   * const storage = credentials.remember ? localStorage : sessionStorage; ເປັນການກຳນົດວ່າຈະໃຊ້ localStorage ຫຼື sessionStorage
+     ໂດຍອີງໃສ່ຄ່າຂອງ credentials.remember.
+   * ຈາກນັ້ນ, storage.setItem(...) ຈະເກັບຂໍ້ມູນໃສ່ໃນບ່ອນເກັບຂໍ້ມູນທີ່ຖືກເລືອກ.
+
+  3.2. ການຈັດການໃນ logout action
+
+
+
+    1 async logout() {
+    2     try {
+    3         if (this.token) {
+    4             // ຍິງ API logout ໄປຫາ backend
+    5             await axios.post('/api/auth/logout', {}, {
+    6                 headers: {
+    7                     Authorization: `Bearer ${this.token}`,
+    8                 },
+    9             });
+   10         }
+   11     } catch (error) {
+   12         console.error('Logout failed:', error);
+   13     } finally {
+   14         // ລຶບ token ແລະ user ອອກຈາກ state ແລະ ທັງ LocalStorage ແລະ SessionStorage
+   15         this.token = null;
+   16         this.user = null;
+   17         localStorage.removeItem('token');
+   18         localStorage.removeItem('user');
+   19         sessionStorage.removeItem('token');
+   20         sessionStorage.removeItem('user');
+   21     }
+   22 }
+
+
+
+   * ເມື່ອ logout action ຖືກເອີ້ນ, ມັນຈໍາເປັນຕ້ອງລຶບ Token ແລະ User Data ອອກຈາກ ທັງ `localStorage` ແລະ `sessionStorage`
+     ເພື່ອຮັບປະກັນວ່າຜູ້ໃຊ້ຖືກອອກຈາກລະບົບຢ່າງສົມບູນ, ບໍ່ວ່າພວກເຂົາຈະເຂົ້າສູ່ລະບົບດ້ວຍວິທີໃດກໍຕາມ.
+
+  3.3. ການຈັດການໃນ fetchUser action (ແລະ Initial State)
+
+
+
+    1 // ໃນ state()
+    2 state:()=>({
+    3     user: JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user')) || null,
+    4     token: localStorage.getItem('token') || sessionStorage.getItem('token') || null,
+    5     permissions:[],
+    6 }),
+    7 
+    8 // ໃນ fetchUser()
+    9 async fetchUser() {
+   10     const storedToken = localStorage.getItem('token') || sessionStorage.getItem('token');
+   11     const storedUser = localStorage.getItem('user') || sessionStorage.getItem('user');
+   12 
+   13     if (storedToken && !this.user) {
+   14         this.token = storedToken;
+   15         if (storedUser) {
+   16             this.user = JSON.parse(storedUser);
+   17         }
+   18         // ... (ເອີ້ນ API /me)
+   19     }
+   20 }
+
+
+
+   * ເມື່ອແອັບພລິເຄຊັນໂຫຼດຂຶ້ນມາ (ຫຼືເມື່ອ fetchUser ຖືກເອີ້ນ), ມັນຈໍາເປັນຕ້ອງກວດສອບວ່າ Token ແລະ User Data ຍັງຄົງຢູ່ໃນ Browser ບໍ່.
+   * ມັນຈະກວດສອບ ທັງ `localStorage` ກ່ອນ ແລ້ວຈຶ່ງ `sessionStorage` (localStorage.getItem('token') || sessionStorage.getItem('token')).
+       * ຖ້າພົບໃນ localStorage, ໝາຍຄວາມວ່າຜູ້ໃຊ້ເລືອກ "Remember me" ແລະຂໍ້ມູນຍັງຄົງຢູ່.
+       * ຖ້າບໍ່ພົບໃນ localStorage ແຕ່ພົບໃນ sessionStorage, ໝາຍຄວາມວ່າຜູ້ໃຊ້ບໍ່ໄດ້ເລືອກ "Remember me" ແຕ່ຍັງຢູ່ໃນ Session ດຽວກັນ.
+   * ການກວດສອບແບບນີ້ເຮັດໃຫ້ແອັບພລິເຄຊັນສາມາດຟື້ນຟູສະຖານະການເຂົ້າສູ່ລະບົບຂອງຜູ້ໃຊ້ໄດ້ຢ່າງຖືກຕ້ອງ, ບໍ່ວ່າພວກເຂົາຈະເລືອກ "Remember me" ຫຼືບໍ່.
+
+
+  ສະຫຼຸບແລ້ວ, ການໃຊ້ sessionStorage ຄຽງຄູ່ກັບ localStorage ແມ່ນເພື່ອໃຫ້ລະບົບສາມາດຈັດການກັບຄວາມຕ້ອງການຂອງຜູ້ໃຊ້ໃນການຮັກສາ Session ໄດ້ຢ່າງຍືດຫຍຸ່ນ,
+  ໂດຍສະເພາະແມ່ນການຮອງຮັບຟັງຊັນ "Remember me" ຢ່າງມີປະສິດທິພາບ.

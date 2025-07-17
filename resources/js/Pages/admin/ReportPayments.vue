@@ -1,1 +1,1 @@
-<template><div>Report Payments</div></template>
+<template><div>ລາຍງານການຊຳລະເງິນ</div></template>

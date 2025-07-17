@@ -9,6 +9,7 @@
                     <li><router-link to="/browse-cars">ເລືອກລົດ</router-link></li>
                     <li><router-link to="/my-bookings">ການຈອງຂອງຂ້ອຍ</router-link></li>
                     <li><router-link to="/my-rental-history">ປະຫວັດການໃຊ້ບໍລິການ</router-link></li>
+                    <li><router-link to="/payment-history">ປະຫວັດການຊຳລະ</router-link></li>
                     <li><router-link to="/auth/login">ເຂົ້າສູ່ລະບົບ</router-link></li>
                 </ul>
             </nav>
@@ -68,7 +69,7 @@ export default {
 
 .customer-content {
     flex-grow: 1;
-    padding: 20px;
+    /* padding: 20px; */
     background-color: #f8f9fa;
 }
 

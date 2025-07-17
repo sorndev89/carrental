@@ -1,0 +1,128 @@
+ໂຄງສ້າງຖານຂໍ້ມູນສະບັບສົມບູນ (The Complete & Simplified Design)
+
+  ກຸ່ມທີ 1: ການຈັດການຜູ້ໃຊ້ ແລະ ສິດ (Users & Permissions)
+
+
+  1. `roles` (ບົດບາດ)
+   * ຈຸດປະສົງ: ເກັບຊື່ບົດບາດຕ່າງໆໃນລະບົບ.
+  | ຊື່ຖັນ | ປະເພດ | ລາຍລະອຽດ |
+  | :--- | :--- | :--- |
+  | id | BIGINT (PK) | ID ຫຼັກ |
+  | name | VARCHAR | ຊື່ບົດບາດ (ເຊັ່ນ: 'Admin', 'Staff', 'Customer') |
+  | description | TEXT | ຄຳອະທິບາຍ (Nullable) |
+  | created_at, updated_at | TIMESTAMP | |
+
+
+  2. `permissions` (ສິດການອະນຸຍາດ)
+   * ຈຸດປະສົງ: ເກັບລາຍການສິດທີ່ສາມາດເຮັດໄດ້ໃນລະບົບ.
+  | ຊື່ຖັນ | ປະເພດ | ລາຍລະອຽດ |
+  | :--- | :--- | :--- |
+  | id | BIGINT (PK) | ID ຫຼັກ |
+  | name | VARCHAR | ຊື່ສິດ (ເຊັ່ນ: 'manage-cars', 'view-reports') |
+  | description | TEXT | ຄຳອະທິບາຍ (Nullable) |
+  | created_at, updated_at | TIMESTAMP | |
+
+
+  3. `role_permission` (ຕາຕະລາງເຊື່ອມໂຍງ ລະຫວ່າງ ສິດ ແລະ ບົດບາດ)
+   * ຈຸດປະສົງ: ເພື່ອເຊື່ອມວ່າ role ໃດ ມີ permission ໃດແດ່ (ໜຶ່ງ role ມີໄດ້ຫຼາຍ permission).
+  | ຊື່ຖັນ | ປະເພດ | ລາຍລະອຽດ |
+  | :--- | :--- | :--- |
+  | role_id | BIGINT (FK) | ID ຈາກ roles.id |
+  | permission_id | BIGINT (FK) | ID ຈາກ permissions.id |
+
+
+  4. `users` (ຜູ້ໃຊ້)
+   * ຈຸດປະສົງ: ເກັບຂໍ້ມູນຜູ້ໃຊ້ທັງໝົດ ແລະ ກຳນົດວ່າຜູ້ໃຊ້ນັ້ນມີບົດບາດຫຍັງ.
+  | ຊື່ຖັນ | ປະເພດ | ລາຍລະອຽດ |
+  | :--- | :--- | :--- |
+  | id | BIGINT (PK) | ID ຫຼັກ |
+  | role_id | BIGINT (FK) | ເຊື່ອມໄປຫາ `roles.id` |
+  | name | VARCHAR | ຊື່ ແລະ ນາມສະກຸນ |
+  | phone_number | VARCHAR | ເບີໂທ (ສຳລັບລູກຄ້າ Login) |
+  | email | VARCHAR | ອີເມວ (ສຳລັບ Admin/Staff Login) |
+  | password | VARCHAR | ລະຫັດຜ່ານ (ສຳລັບ Admin/Staff) |
+  | profile_image_url | VARCHAR | URL ຮູບໂປຣໄຟລ໌ (Nullable) |
+  | created_at, updated_at | TIMESTAMP | |
+
+  ---
+
+  ກຸ່ມທີ 2: ການຈັດການລົດ ແລະ ການຈອງ (Cars & Bookings)
+
+
+  5. `car_types` (ປະເພດລົດ)
+   * ຈຸດປະສົງ: ເກັບປະເພດຂອງລົດ (Sedan, SUV, Van).
+  | ຊື່ຖັນ | ປະເພດ | ລາຍລະອຽດ |
+  | :--- | :--- | :--- |
+  | id | BIGINT (PK) | ID ຫຼັກ |
+  | name | VARCHAR | ຊື່ປະເພດລົດ |
+  | description | TEXT | ຄຳອະທິບາຍ (Nullable) |
+  | created_at, updated_at | TIMESTAMP | |
+
+
+  6. `cars` (ລົດ)
+   * ຈຸດປະສົງ: ເກັບຂໍ້ມູນລົດທັງໝົດ.
+  | ຊື່ຖັນ | ປະເພດ | ລາຍລະອຽດ |
+  | :--- | :--- | :--- |
+  | id | BIGINT (PK) | ID ຫຼັກ |
+  | car_type_id | BIGINT (FK) | ເຊື່ອມໄປຫາ car_types.id |
+  | make | VARCHAR | ຍີ່ຫໍ້ |
+  | model | VARCHAR | ລຸ້ນ |
+  | license_plate | VARCHAR | ປ້າຍທະບຽນລົດ (Unique) |
+  | daily_rate | DECIMAL | ລາຄາເຊົ່າຕໍ່ມື້ |
+  | image_url | VARCHAR | URL ຮູບຂອງລົດ (Nullable) |
+  | status | ENUM | 'available', 'rented', 'maintenance' |
+  | created_at, updated_at | TIMESTAMP | |
+
+
+  7. `bookings` (ການຈອງ)
+   * ຈຸດປະສົງ: ເກັບຂໍ້ມູນການຈອງທັງໝົດ.
+  | ຊື່ຖັນ | ປະເພດ | ລາຍລະອຽດ |
+  | :--- | :--- | :--- |
+  | id | BIGINT (PK) | ID ຫຼັກ |
+  | user_id | BIGINT (FK) | ID ຂອງລູກຄ້າ (ຈາກ users.id) |
+  | car_id | BIGINT (FK) | ID ຂອງລົດ (ຈາກ cars.id) |
+  | pickup_date | DATE | ວັນທີຮັບລົດ |
+  | return_date | DATE | ວັນທີສົ່ງລົດຄືນ |
+  | total_price | DECIMAL | ລາຄາລວມ |
+  | booking_status | ENUM | 'pending', 'confirmed', 'cancelled', 'completed' |
+  | created_at, updated_at | TIMESTAMP | |
+
+  ---
+
+  ກຸ່ມທີ 3: ການເງິນ ແລະ ການຕັ້ງຄ່າ (Finance & Settings)
+
+
+  8. `transactions` (ທຸລະກຳການເງິນ)
+   * ຈຸດປະສົງ: ເກັບລາຍຮັບ-ລາຍຈ່າຍທັງໝົດ.
+  | ຊື່ຖັນ | ປະເພດ | ລາຍລະອຽດ |
+  | :--- | :--- | :--- |
+  | id | BIGINT (PK) | ID ຫຼັກ |
+  | booking_id | BIGINT (FK) | ເຊື່ອມໄປຫາ bookings.id (Nullable, ເພາະรายจ่ายอาจไม่เกี่ยวกับการจอง) |
+  | recorded_by | BIGINT (FK) | ID ຜູ້ບັນທຶກ (ຈາກ users.id) |
+  | type | ENUM | 'income', 'expense' |
+  | amount | DECIMAL | ຈຳນວນເງິນ |
+  | description | TEXT | ລາຍລະອຽດທຸລະກຳ |
+  | transaction_date | DATETIME | ວັນທີເກີດທຸລະກຳ |
+  | created_at, updated_at | TIMESTAMP | |
+
+
+  9. `settings` (ການຕັ້ງຄ່າລະບົບ)
+   * ຈຸດປະສົງ: ເກັບການຕັ້ງຄ່າທົ່ວໄປ.
+  | ຊື່ຖັນ | ປະເພດ | ລາຍລະອຽດ |
+  | :--- | :--- | :--- |
+  | id | BIGINT (PK) | ID ຫຼັກ |
+  | key | VARCHAR | ຊື່ຂອງການຕັ້ງຄ່າ (ເຊັ່ນ: 'system_name') |
+  | value | TEXT | ຄ່າຂອງການຕັ້ງຄ່ານັ້ນໆ |
+  | created_at, updated_at | TIMESTAMP | |
+
+  ---
+
+  ຈຸດເດັ່ນຂອງການອອກແບບນີ້:
+
+
+   * ໂຄງສ້າງສິດທີ່ຊັດເຈນ: ລະບົບ roles ແລະ permissions ນີ້ເປັນມາດຕະຖານ, ງ່າຍຕໍ່ການກຳນົດວ່າ "Staff" ເຮັດຫຍັງໄດ້ແດ່, "Admin" ເຮັດຫຍັງໄດ້ແດ່.
+   * ຕາຕະລາງ `transactions` ທີ່ຍືດຍຸ່ນ: ສາມາດບັນທຶກລາຍຮັບຈາກການຈອງ (booking_id ຈະມີຄ່າ) ແລະ ບັນທຶກລາຍຈ່າຍທົ່ວໄປທີ່ບໍ່ກ່ຽວກັບການຈອງໄດ້ (booking_id ຈະເປັນ null).
+   * ກົງໄປກົງມາ: ທຸກຕາຕະລາງມີຈຸດປະສົງດຽວທີ່ຊັດເຈນ, ເຮັດໃຫ້ເຂົ້າໃຈງ່າຍ ແລະ ບໍ່ມີຂໍ້ມູນຊ້ຳຊ້ອນ.
+
+
+  ຖ້າທ່ານເຫັນດີກັບໂຄງສ້າງໃໝ່ນີ້, ຂ້ອຍພ້ອມທີ່ຈະດຳເນີນການ ລຶບ migrations ເກົ່າ ແລະ ສ້າງຊຸດໃໝ່ທັງໝົດ ຕາມນີ້ໃຫ້ທ່ານ.

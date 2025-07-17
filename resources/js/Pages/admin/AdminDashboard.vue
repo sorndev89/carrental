@@ -4,7 +4,7 @@
         <div class="page-header">
             <div class="row">
                 <div class="col-sm-12">
-                    <h3 class="page-title">Welcome Admin!</h3>
+                    <h3 class="page-title">ຍິນດີຕ້ອນຮັບ, Admin!</h3>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item active">Dashboard</li>
                     </ul>
@@ -23,7 +23,7 @@
                                 <i class="ti ti-car"></i>
                             </span>
                             <div class="dash-count">
-                                <div class="dash-title">Total Cars</div>
+                                <div class="dash-title">ຈຳນວນລົດທັງໝົດ</div>
                                 <div class="dash-counts">
                                     <p>100</p>
                                 </div>
@@ -46,7 +46,7 @@
                                 <i class="ti ti-users"></i>
                             </span>
                             <div class="dash-count">
-                                <div class="dash-title">Total Customers</div>
+                                <div class="dash-title">ຈຳນວນລູກຄ້າທັງໝົດ</div>
                                 <div class="dash-counts">
                                     <p>500</p>
                                 </div>
@@ -69,7 +69,7 @@
                                         <i class="ti ti-receipt-2"></i>
                                     </span>
                                     <div class="dash-count">
-                                        <div class="dash-title">Total Bookings</div>
+                                        <div class="dash-title">ຈຳນວນການຈອງທັງໝົດ</div>
                                         <div class="dash-counts">
                                             <p>250</p>
                                         </div>
@@ -92,7 +92,7 @@
                                         <i class="ti ti-currency-dollar"></i>
                                     </span>
                                     <div class="dash-count">
-                                        <div class="dash-title">Total Revenue</div>
+                                        <div class="dash-title">ລາຍຮັບທັງໝົດ</div>
                                         <div class="dash-counts">
                                             <p>$15,000</p>
                                         </div>
@@ -115,14 +115,14 @@
                     <div class="col-lg-8">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Monthly Bookings Overview</h4>
+                                <h4 class="card-title">ພາບລວມການຈອງລາຍເດືອນ</h4>
                             </div>
                             <div class="card-body">
-                                <!-- Placeholder for Chart -->
+                                <!-- ບ່ອນວ່າງສຳລັບຕາຕະລາງ -->
                                 <div style="height: 300px; background-color: #f8f9fa; display: flex; align-items: center; justify-content: center; border: 1px dashed #ccc;">
-                                    <p>Chart will be displayed here (e.g., using ApexCharts, Chart.js)</p>
+                                    <p>ຕາຕະລາງຈະສະແດງຢູ່ທີ່ນີ້ (ຕົວຢ່າງ: ໃຊ້ ApexCharts, Chart.js)</p>
                                 </div>
-                                <!-- /Placeholder for Chart -->
+                                <!-- /ບ່ອນວ່າງສຳລັບຕາຕະລາງ -->
                             </div>
                         </div>
                     </div>
@@ -376,14 +376,13 @@ export default {
     name: 'AdminDashboard',
     data() {
         return {
-            url: window.location.origin
+            url: window.location.origin // ກໍານົດ URL ຫຼັກຂອງແອັບພລິເຄຊັນ
         }
     },
     mounted() {
-        // Initialize any template-specific JS here if needed
-        // For example, if the template uses jQuery for sidebar toggling or dropdowns,
-        // you might need to re-initialize them or find Vue-compatible alternatives.
-        // feather.replace() is already in app.js, so no need to call it here again unless specific to this component.
+        // ຟັງຊັນນີ້ຈະຖືກເອີ້ນໃຊ້ເມື່ອ component ຖືກ mount ເຂົ້າໃນ DOM.
+        // ທ່ານສາມາດເພີ່ມ logic ການເລີ່ມຕົ້ນໃດໆທີ່ນີ້, ຕົວຢ່າງ: ການໂຫຼດຂໍ້ມູນ, ການເລີ່ມຕົ້ນ plugins.
+        // feather.replace() ແມ່ນຖືກເອີ້ນໃຊ້ແລ້ວໃນ app.js, ດັ່ງນັ້ນບໍ່ຈໍາເປັນຕ້ອງເອີ້ນໃຊ້ຢູ່ທີ່ນີ້ອີກ.
     }
 }
 </script>

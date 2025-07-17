@@ -2,8 +2,8 @@
     		<div class="page-header">
 						<div class="add-item d-flex">
 							<div class="page-title">
-								<h4 class="fw-bold">Users</h4>
-								<h6>Manage your users</h6>
+								<h4 class="fw-bold">ຜູ້ໃຊ້</h4>
+								<h6>ຈັດການຜູ້ໃຊ້ຂອງທ່ານ</h6>
 							</div>
 						</div>
 						<ul class="table-top-head">
@@ -21,7 +21,7 @@
 							</li>
 						</ul>
 						<div class="page-btn">
-							<a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-user"><i class="ti ti-circle-plus me-1"></i>Add User</a>
+							            <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-user"><i class="ti ti-circle-plus me-1"></i>ເພີ່ມຜູ້ໃຊ້</a>
 						</div>
 					</div>
 
@@ -32,20 +32,20 @@
 							<div class="search-set">
 								<div class="search-input">
 									<span class="btn-searchset"><i class="ti ti-search fs-14 feather-search"></i></span>
-								<div id="DataTables_Table_0_filter" class="dataTables_filter"><label> <input type="search" class="form-control form-control-sm" placeholder="Search" aria-controls="DataTables_Table_0"></label></div></div>
+								<div id="DataTables_Table_0_filter" class="dataTables_filter"><label> <input type="search" class="form-control form-control-sm" placeholder="ຄົ້ນຫາ" aria-controls="DataTables_Table_0"></label></div></div>
 							</div>
 							<div class="d-flex table-dropdown my-xl-auto right-content align-items-center flex-wrap row-gap-3">
 										
 								<div class="dropdown">
 									<a href="javascript:void(0);" class="dropdown-toggle btn btn-white btn-md d-inline-flex align-items-center" data-bs-toggle="dropdown">
-										Status
+										ສະຖານະ
 									</a>
 									<ul class="dropdown-menu  dropdown-menu-end p-3">
 										<li>
-											<a href="javascript:void(0);" class="dropdown-item rounded-1">Active</a>
+											<a href="javascript:void(0);" class="dropdown-item rounded-1">ເຄື່ອນໄຫວ</a>
 										</li>
 										<li>
-											<a href="javascript:void(0);" class="dropdown-item rounded-1">Inactive</a>
+											<a href="javascript:void(0);" class="dropdown-item rounded-1">ບໍ່ເຄື່ອນໄຫວ</a>
 										</li>
 							
 									</ul>
@@ -56,12 +56,7 @@
 							<div class="table-responsive">
 								<div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer table-responsive"><table class="table datatable dataTable no-footer" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
 									<thead class="thead-light">
-										<tr><th class="no-sort sorting sorting_asc" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label=": activate to sort column descending" style="width: 35px;" aria-sort="ascending">
-												<label class="checkboxs">
-													<input type="checkbox" id="select-all">
-													<span class="checkmarks"></span>
-												</label>
-											</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="User Name: activate to sort column ascending" style="width: 138.805px;">User Name</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Phone: activate to sort column ascending" style="width: 94.8047px;">Phone</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Email: activate to sort column ascending" style="width: 144.555px;">Email</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Role: activate to sort column ascending" style="width: 91.3828px;">Role</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style="width: 49.2734px;">Status</th><th class="no-sort sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label=": activate to sort column ascending" style="width: 106px;"></th></tr>
+										<tr><th>ຊື່ຜູ້ໃຊ້</th><th>ເບີໂທ</th><th>ອີເມວ</th><th>ບົດບາດ</th><th>ສະຖານະ</th><th></th></tr>
 									</thead>
 									<tbody>					
 									<tr class="odd">
@@ -395,13 +390,13 @@
                                     <div class=" p-2 d-flex align-items-center ">
                                            
                                                 <label class="me-2"> ສະແດງ</label>
-                                                <select class="form-select form-select-sm me-2">
-                                                    <option value="10">10</option>
-                                                    <option value="25">25</option>
-                                                    <option value="50">50</option>
-                                                    <option value="100">100</option>
-                                                </select> 
-                                                <div class=" text-nowrap "  role="status" aria-live="polite">1 - 10 of 10 items</div>
+                                                                <select class="form-select form-select-sm me-2">
+                                                                    <option value="10">10</option>
+                                                                    <option value="25">25</option>
+                                                                    <option value="50">50</option>
+                                                                    <option value="100">100</option>
+                                                                </select> 
+                                                                <div class=" text-nowrap "  role="status" aria-live="polite">1 - 10 ຂອງ 10 ລາຍການ</div>
                                           
                                         </div>
                                         <div class="w-100">
@@ -409,7 +404,7 @@
                                                 <ul class="pagination">
                                                     <li class="paginate_button page-item previous disabled" id="DataTables_Table_0_previous">
                                                         <a aria-controls="DataTables_Table_0" aria-disabled="true" role="link" data-dt-idx="previous" tabindex="-1" class="page-link">
-                                                            <i class="fa fa-angle-left"></i> 
+                                                            <i class="fa fa-angle-left"></i> ກ່ອນໜ້າ
                                                         </a>
                                                     </li>
                                                     <li class="paginate_button page-item active">
@@ -417,7 +412,7 @@
                                                         </a>
                                                     </li>
                                                     <li class="paginate_button page-item next disabled" id="DataTables_Table_0_next"><a aria-controls="DataTables_Table_0" aria-disabled="true" role="link" data-dt-idx="next" tabindex="-1" class="page-link"> 
-                                                        <i class=" fa fa-angle-right"></i>
+                                                        <i class=" fa fa-angle-right"></i> ຕໍ່ໄປ
                                                         </a>
                                                     </li>
                                                 </ul>
@@ -442,7 +437,7 @@
 						<div class="content">
 							<div class="modal-header">
 								<div class="page-title">
-									<h4>Add User</h4>
+									<h4>ເພີ່ມຜູ້ໃຊ້</h4>
 								</div>
 								<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
 									<span aria-hidden="true">&times;</span>
@@ -456,31 +451,31 @@
 												
 												<div class="profile-pic-upload mb-2">
 													<div class="profile-pic">
-														<span><i data-feather="plus-circle" class="plus-down-add"></i>Add Image</span>
+														<span><i data-feather="plus-circle" class="plus-down-add"></i>ເພີ່ມຮູບ</span>
 													</div>
 													<div class="mb-0">
 														<div class="image-upload mb-0">
 															<input type="file">
 															<div class="image-uploads">
-																<h4>Upload Image</h4>
+																<h4>ອັບໂຫຼດຮູບພາບ</h4>
 															</div>
 														</div>
-														<p class="fs-13 mt-2">JPEG, PNG up to 2 MB</p>
+														<p class="fs-13 mt-2">JPEG, PNG ສູງສຸດ 2 MB</p>
 													</div>
 												</div>
 											</div>
 										</div>
 										<div class="col-lg-12">
 											<div class="mb-3">
-												<label class="form-label">User<span class="text-danger ms-1">*</span></label>
+												<label class="form-label">ຜູ້ໃຊ້<span class="text-danger ms-1">*</span></label>
 												<input type="text" class="form-control">
 											</div>
 										</div>
 										<div class="col-lg-12">
 											<div class="mb-3">
-												<label class="form-label">Role<span class="text-danger ms-1">*</span></label>
+												<label class="form-label">ບົດບາດ<span class="text-danger ms-1">*</span></label>
 												<select class="select">
-													<option>Select</option>
+													<option>ເລືອກ</option>
 													<option>Admin</option>
 													<option>Manager</option>
 													<option>Salesman</option>
@@ -489,20 +484,20 @@
 										</div>
 										<div class="col-lg-12">
 											<div class="mb-3">
-												<label class="form-label">Email<span class="text-danger ms-1">*</span></label>
+												<label class="form-label">ອີເມວ<span class="text-danger ms-1">*</span></label>
 												<input type="email" class="form-control">
 											</div>
 										</div>
 										<div class="col-lg-12">
 											<div class="mb-3">
-												<label class="form-label">Phone<span class="text-danger ms-1">*</span></label>
+												<label class="form-label">ເບີໂທ<span class="text-danger ms-1">*</span></label>
 												<input type="tel" class="form-control">
 											</div>
 										</div>
 									
 										<div class="col-lg-6">
 											<div class="mb-3">
-												<label class="form-label">Password<span class="text-danger ms-1">*</span></label>
+												<label class="form-label">ລະຫັດຜ່ານ<span class="text-danger ms-1">*</span></label>
 												<div class="pass-group">
 													<input type="password" class="pass-input form-control">
 													<i class="ti ti-eye-off toggle-password"></i>
@@ -511,7 +506,7 @@
 										</div>
 										<div class="col-lg-6">
 											<div class="mb-3">
-												<label class="form-label">Confirm Password<span class="text-danger ms-1">*</span></label>
+												<label class="form-label">ຍືນຍັນ ລະຫັດຜ່ານ<span class="text-danger ms-1">*</span></label>
 												<div class="pass-group">
 													<input type="password" class="pass-input form-control">
 													<i class="ti ti-eye-off toggle-password"></i>
@@ -543,7 +538,7 @@
 export default {
     data() {
         return {
-            url:window.location.origin,
+            url:window.location.origin, // URL ຫຼັກຂອງແອັບພລິເຄຊັນ
         }
     },
 }

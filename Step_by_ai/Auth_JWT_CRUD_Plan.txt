@@ -1,0 +1,1659 @@
+### ແຜນການສ້າງລະບົບ Auth (JWT) ແລະ CRUD User
+
+ລະບົບນີ້ຈະແບ່ງອອກເປັນສອງສ່ວນຫຼັກຄື: **Backend (Laravel)** ແລະ **Frontend (Vue.js)**.
+
+---
+
+### **ສ່ວນທີ 1: Backend (Laravel)**
+
+ໃນສ່ວນນີ້, ເຮົາຈະຕິດຕັ້ງ JWT, ຕັ້ງຄ່າ Laravel, ສ້າງ Controller ສຳລັບ Auth ແລະ User CRUD.
+
+**ຂັ້ນຕອນທີ 1: ຕິດຕັ້ງ JWT Package**
+
+*   **ຄຳອະທິບາຍ:** ຕິດຕັ້ງ `tymon/jwt-auth` ເຊິ່ງເປັນ package ທີ່ນິຍົມໃຊ້ສຳລັບການຈັດການ JWT tokens ໃນ Laravel.
+*   **ຄຳສັ່ງ:**
+    ```bash
+    composer require tymon/jwt-auth
+    ```
+*   **ຫຼັງຈາກຕິດຕັ້ງແລ້ວ, ໃຫ້ Publish Configuration:**
+    ```bash
+    php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\LaravelServiceProvider"
+    ```
+*   **ສ້າງ JWT Secret Key:**
+    ```bash
+    php artisan jwt:secret
+    ```
+    ຄຳສັ່ງນີ້ຈະເພີ່ມ `JWT_SECRET` ໃສ່ໄຟລ໌ `.env` ຂອງເຈົ້າ.
+
+**ຂັ້ນຕອນທີ 2: ອັບເດດ User Model**
+
+*   **ຄຳອະທິບາຍ:** ເພື່ອໃຫ້ User Model ສາມາດສ້າງ JWT token ໄດ້, ມັນຈຳເປັນຕ້ອງ implement `JWTSubject` interface ແລະມີສອງ method ຄື `getJWTIdentifier()` ແລະ `getJWTCustomClaims()`.
+*   **ໄຟລ໌:** `app/Models/User.php`
+*   **ການປ່ຽນແປງ:**
+    *   ເພີ່ມ `use Tymon\JWTAuth\Contracts\JWTSubject;`
+    *   ເພີ່ມ `implements JWTSubject` ໃສ່ class `User`.
+    *   ເພີ່ມ method `getJWTIdentifier()` ແລະ `getJWTCustomClaims()`.
+
+    ```php
+    <?php
+
+    namespace App\Models;
+
+    use Illuminate\Database\Eloquent\Factories\HasFactory;
+    use Illuminate\Foundation\Auth\User as Authenticatable;
+    use Illuminate\Notifications\Notifiable;
+    use Tymon\JWTAuth\Contracts\JWTSubject; // ເພີ່ມນີ້
+    use App\Models\Role; // ເພີ່ມນີ້ສຳລັບ relationship
+
+    class User extends Authenticatable implements JWTSubject // ເພີ່ມ implements JWTSubject
+    {
+        use HasFactory, Notifiable;
+
+        protected $table = 'users';
+        protected $primaryKey = 'id'; // ໃຫ້ແນ່ໃຈວ່າ primary key ແມ່ນ 'id'
+
+        protected $fillable = [
+            'role_id',
+            'first_name',
+            'last_name',
+            'gender',
+            'date_of_birth',
+            'phone_number',
+            'email',
+            'password',
+            'profile_image_url',
+            'address',
+            'city',
+            'province',
+            'zip_code',
+        ];
+
+        protected $hidden = [
+            'password',
+            'remember_token',
+        ];
+
+        protected function casts(): array
+        {
+            return [
+                'email_verified_at' => 'datetime',
+                'password' => 'hashed',
+                'date_of_birth' => 'date',
+            ];
+        }
+
+        // ເພີ່ມສອງ method ນີ້ສຳລັບ JWT
+        public function getJWTIdentifier()
+        {
+            return $this->getKey(); // ໃຊ້ getKey() ເພື່ອເອົາຄ່າ primary key (id)
+        }
+
+        public function getJWTCustomClaims()
+        {
+            return [];
+        }
+
+        // ເພີ່ມ relationship ກັບ Role (ຖ້າເຈົ້າມີຕາຕະລາງ roles)
+        public function role()
+        {
+            return $this->belongsTo(Role::class);
+        }
+    }
+    ```
+
+**ຂັ້ນຕອນທີ 3: ຕັ້ງຄ່າ Auth Guard**
+
+*   **ຄຳອະທິບາຍ:** ບອກ Laravel ໃຫ້ໃຊ້ `jwt` guard ສຳລັບ API requests.
+*   **ໄຟລ໌:** `config/auth.php`
+*   **ການປ່ຽນແປງ:** ພາຍໃຕ້ `'guards'` array, ເພີ່ມ `api` guard.
+
+    ```php
+    'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'api' => [ // ເພີ່ມນີ້
+            'driver' => 'jwt',
+            'provider' => 'users',
+        ],
+    ],
+    ```
+
+**ຂັ້ນຕອນທີ 4: ສ້າງ AuthController**
+
+*   **ຄຳອະທິບາຍ:** Controller ນີ້ຈະຈັດການ logic ການເຂົ້າສູ່ລະບົບ, ອອກຈາກລະບົບ, refresh token, ແລະດຶງຂໍ້ມູນຜູ້ໃຊ້.
+*   **ຄຳສັ່ງ:**
+    ```bash
+    php artisan make:controller AuthController
+    ```
+*   **ໄຟລ໌:** `app/Http/Controllers/AuthController.php`
+*   **ເນື້ອໃນ:**
+
+    ```php
+    <?php
+
+    namespace App\Http\Controllers;
+
+    use Illuminate\Http\Request;
+    use Illuminate\Support\Facades\Auth;
+    use Illuminate\Support\Facades\Validator;
+    use App\Models\User; // ໃຫ້ແນ່ໃຈວ່າໄດ້ import User model
+
+    class AuthController extends Controller
+    {
+        public function __construct()
+        {
+            // ປ້ອງກັນ method ຍົກເວັ້ນ 'login' ດ້ວຍ middleware 'auth:api'
+            $this->middleware('auth:api', ['except' => ['login']]);
+        }
+
+        /**
+         * Get a JWT via given credentials.
+         *
+         * @return \Illuminate\Http\JsonResponse
+         */
+        public function login(Request $request)
+        {
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email',
+                'password' => 'required|string|min:6',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 422);
+            }
+
+            // ພະຍາຍາມເຂົ້າສູ່ລະບົບດ້ວຍ credentials ທີ່ໃຫ້ມາ
+            if (! $token = auth('api')->attempt($validator->validated())) {
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
+
+            return $this->createNewToken($token);
+        }
+
+        /**
+         * Log the user out (Invalidate the token).
+         *
+         * @return \Illuminate\Http\JsonResponse
+         */
+        public function logout()
+        {
+            auth('api')->logout(); // ເຮັດໃຫ້ token ໝົດອາຍຸ
+
+            return response()->json(['message' => 'User successfully signed out']);
+        }
+
+        /**
+         * Refresh a token.
+         *
+         * @return \Illuminate\Http\JsonResponse
+         */
+        public function refresh()
+        {
+            return $this->createNewToken(auth('api')->refresh()); // ສ້າງ token ໃໝ່ຈາກ token ເກົ່າ
+        }
+
+        /**
+         * Get the authenticated User.
+         *
+         * @return \Illuminate\Http\JsonResponse
+         */
+        public function me()
+        {
+            return response()->json(auth('api')->user()); // ສົ່ງຂໍ້ມູນຜູ້ໃຊ້ທີ່ເຂົ້າສູ່ລະບົບ
+        }
+
+        /**
+         * Get the token array structure.
+         *
+         * @param  string $token
+         *
+         * @return \Illuminate\Http\JsonResponse
+         */
+        protected function createNewToken($token)
+        {
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => auth('api')->factory()->getTTL() * 60, // ໄລຍະເວລາໝົດອາຍຸຂອງ token
+                'user' => auth('api')->user() // ຂໍ້ມູນຜູ້ໃຊ້
+            ]);
+        }
+    }
+    ```
+
+**ຂັ້ນຕອນທີ 5: ຈັດການ User CRUD ໃນ UserController**
+
+*   **ຄຳອະທິບາຍ:** ເພີ່ມ method ສຳລັບການສ້າງ, ອ່ານ, ອັບເດດ, ລຶບ User. ທຸກ method ຈະມີການກວດສອບຂໍ້ມູນ (Validation) ແລະໃຊ້ `try-catch` ເພື່ອຈັດການ error.
+*   **ໄຟລ໌:** `app/Http/Controllers/UserController.php`
+*   **ເນື້ອໃນ:**
+
+    ```php
+    <?php
+
+    namespace App\Http\Controllers;
+
+    use App\Models\User;
+    use Illuminate\Http\Request;
+    use Illuminate\Support\Facades\Hash;
+    use Illuminate\Support\Facades\Validator;
+    use Exception; // ໃຫ້ແນ່ໃຈວ່າໄດ້ import Exception
+
+    class UserController extends Controller
+    {
+        public function __construct()
+        {
+            // ປ້ອງກັນທຸກ method ດ້ວຍ middleware 'auth:api'
+            $this->middleware('auth:api');
+        }
+
+        /**
+         * Display a listing of the resource.
+         */
+        public function index()
+        {
+            try {
+                // ດຶງຂໍ້ມູນ users ພ້ອມກັບ role ຂອງເຂົາເຈົ້າ, ລຽງຕາມລ່າສຸດ ແລະ paginate 10 ລາຍການ
+                $users = User::with('role')->latest()->paginate(10);
+                return response()->json($users);
+            } catch (Exception $e) {
+                // ຈັດການ error ດ້ວຍ try-catch
+                return response()->json(['error' => 'Unable to fetch users.', 'message' => $e->getMessage()], 500);
+            }
+        }
+
+        /**
+         * Store a newly created resource in storage.
+         */
+        public function store(Request $request)
+        {
+            // ກວດສອບຂໍ້ມູນທີ່ສົ່ງມາ
+            $validator = Validator::make($request->all(), [
+                'first_name' => 'required|string|max:255',
+                'last_name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|min:8|confirmed', // 'confirmed' ຕ້ອງການ password_confirmation
+                'phone_number' => 'required|string|unique:users',
+                'role_id' => 'required|exists:roles,id', // ໃຫ້ແນ່ໃຈວ່າ role_id ມີຢູ່ໃນຕາຕະລາງ roles
+                'gender' => 'required|string',
+                'date_of_birth' => 'required|date',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 422); // ສົ່ງ error validation
+            }
+
+            try {
+                // ສ້າງ user ໃໝ່
+                $user = User::create(array_merge(
+                    $validator->validated(),
+                    ['password' => Hash::make($request->password)] // Hash ລະຫັດຜ່ານ
+                ));
+
+                return response()->json(['message' => 'User created successfully', 'user' => $user], 201);
+            } catch (Exception $e) {
+                return response()->json(['error' => 'User creation failed.', 'message' => $e->getMessage()], 500);
+            }
+        }
+
+        /**
+         * Display the specified resource.
+         */
+        public function show(User $user)
+        {
+            try {
+                return response()->json($user->load('role')); // ດຶງ user ພ້ອມ role
+            } catch (Exception $e) {
+                return response()->json(['error' => 'Unable to fetch user.', 'message' => $e->getMessage()], 500);
+            }
+        }
+
+        /**
+         * Update the specified resource in storage.
+         */
+        public function update(Request $request, User $user)
+        {
+            // ກວດສອບຂໍ້ມູນທີ່ສົ່ງມາສຳລັບການອັບເດດ
+            $validator = Validator::make($request->all(), [
+                'first_name' => 'sometimes|required|string|max:255',
+                'last_name' => 'sometimes|required|string|max:255',
+                'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $user->id, // ບໍ່ໃຫ້ email ຊ້ຳກັນຍົກເວັ້ນຂອງ user ເອງ
+                'password' => 'nullable|string|min:8|confirmed', // ລະຫັດຜ່ານສາມາດເປັນ null ໄດ້ຖ້າບໍ່ຕ້ອງການປ່ຽນ
+                'phone_number' => 'sometimes|required|string|unique:users,phone_number,' . $user->id,
+                'role_id' => 'sometimes|required|exists:roles,id',
+                'gender' => 'sometimes|required|string',
+                'date_of_birth' => 'sometimes|required|date',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 422);
+            }
+
+            try {
+                $data = $validator->validated();
+                if ($request->filled('password')) { // ຖ້າມີການປ້ອນລະຫັດຜ່ານໃໝ່
+                    $data['password'] = Hash::make($request->password);
+                } else {
+                    unset($data['password']); // ບໍ່ອັບເດດລະຫັດຜ່ານຖ້າບໍ່ໄດ້ປ້ອນ
+                }
+
+                $user->update($data);
+
+                return response()->json(['message' => 'User updated successfully', 'user' => $user]);
+            } catch (Exception $e) {
+                return response()->json(['error' => 'User update failed.', 'message' => $e->getMessage()], 500);
+            }
+        }
+
+        /**
+         * Remove the specified resource from storage.
+         */
+        public function destroy(User $user)
+        {
+            try {
+                $user->delete();
+                return response()->json(['message' => 'User deleted successfully']);
+            } catch (Exception $e) {
+                return response()->json(['error' => 'User deletion failed.', 'message' => $e->getMessage()], 500);
+            }
+        }
+    }
+    ```
+
+**ຂັ້ນຕອນທີ 6: ກຳນົດ API Routes**
+
+*   **ຄຳອະທິບາຍ:** ກຳນົດ endpoints ສຳລັບການ authentication ແລະ CRUD user.
+*   **ໄຟລ໌:** `routes/api.php` (ຖ້າບໍ່ມີ, ໃຫ້ສ້າງໃໝ່)
+ຕິດຕັ້ງ api: php artisan install:api
+*   **ເນື້ອໃນ:**
+
+    ```php
+    <?php
+
+    use Illuminate\Http\Request;
+    use Illuminate\Support\Facades\Route;
+    use App\Http\Controllers\AuthController;
+    use App\Http\Controllers\UserController;
+    use App\Http\Controllers\RoleController; // ຖ້າເຈົ້າມີ RoleController
+
+    // Routes ສຳລັບ Authentication (ບໍ່ຕ້ອງການ token ໃນຕອນ login)
+    Route::group([
+        'middleware' => 'api',
+        'prefix' => 'auth'
+    ], function ($router) {
+        Route::post('/login', [AuthController::class, 'login']);
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::post('/refresh', [AuthController::class, 'refresh']);
+        Route::get('/me', [AuthController::class, 'me']);
+    });
+
+    // Routes ສຳລັບ User CRUD (ຕ້ອງການ token)
+    Route::group(['middleware' => 'api'], function () {
+        Route::apiResource('users', UserController::class);
+        // ຖ້າເຈົ້າມີ RoleController ແລະຕ້ອງການ API ສຳລັບ roles
+        Route::apiResource('roles', RoleController::class);
+    });
+    ```
+    *ໝາຍເຫດ:* ຖ້າເຈົ້າຍັງບໍ່ມີ `RoleController`, ເຈົ້າສາມາດສ້າງມັນໄດ້ດ້ວຍ `php artisan make:controller RoleController`. ພາຍໃນ `RoleController`, ເຈົ້າສາມາດເພີ່ມ method `index()` ເພື່ອສົ່ງລາຍຊື່ roles ກັບຄືນໄປໃຫ້ frontend.
+
+---
+
+### **ສ່ວນທີ 2: Frontend (Vue.js)**
+
+ໃນສ່ວນນີ້, ເຮົາຈະຕັ້ງຄ່າ Pinia, ສ້າງ Auth Store, ຕັ້ງຄ່າ Axios, ແລະອັບເດດ Vue Components.
+
+**ຂັ້ນຕອນທີ 1: ຕິດຕັ້ງ Dependencies**
+
+*   **ຄຳອະທິບາຍ:** ຕິດຕັ້ງ Pinia ສຳລັບ state management ແລະ Axios ສຳລັບ HTTP requests.
+*   **ຄຳສັ່ງ:**
+    ```bash
+    npm install pinia axios sweetalert2 vue-sweetalert2
+    ```
+    *ໝາຍເຫດ:* ເຈົ້າໄດ້ຕິດຕັ້ງ `sweetalert2` ແລະ `vue-sweetalert2` ໄປແລ້ວ, ແຕ່ຂ້ອຍລວມມັນໄວ້ໃນຄຳສັ່ງນີ້ເພື່ອຄວາມສົມບູນ.
+
+**ຂັ້ນຕອນທີ 2: ຕັ້ງຄ່າ Pinia ໃນ `app.js`**
+
+*   **ຄຳອະທິບາຍ:** ໃຫ້ແນ່ໃຈວ່າ Pinia ຖືກສ້າງ ແລະໃຊ້ງານໃນ Vue app ຂອງເຈົ້າ.
+*   **ໄຟລ໌:** `resources/js/app.js`
+*   **ການປ່ຽນແປງ:** (ຈາກໄຟລ໌ທີ່ເຈົ້າໃຫ້ມາ, ມັນຖືກຕັ້ງຄ່າໄວ້ແລ້ວ)
+
+    ```javascript
+    import './bootstrap';
+
+    import { createApp } from 'vue';
+    import App from './App.vue';
+    import Menu from './Components/Menu.vue';
+    import HeaderAdmin from './Components/HeaderAdmin.vue';
+    import router from './Router';
+    import feather from 'feather-icons';
+
+    import VueSweetalert2 from 'vue-sweetalert2'
+    import 'sweetalert2/dist/sweetalert2.min.css'
+
+    import { createPinia } from 'pinia'; // Import Pinia
+    const pinia = createPinia(); // Create Pinia instance
+
+
+    const app = createApp(App);
+    app.use(pinia); // Use Pinia
+    app.use(router);
+    app.component('Menu', Menu);
+    app.component('HeaderAdmin', HeaderAdmin);
+    app.use(VueSweetalert2)
+
+    app.mount('#app');
+
+    feather.replace()
+    ```
+
+**ຂັ້ນຕອນທີ 3: ສ້າງ Auth Store (Pinia)**
+
+*   **ຄຳອະທິບາຍ:** ສ້າງ Pinia store ເພື່ອຈັດການ state (user, token) ແລະ actions (login, logout, refreshToken) ທີ່ກ່ຽວຂ້ອງກັບ authentication. ຂໍ້ມູນຈະຖືກເກັບໄວ້ໃນ LocalStorage ເພື່ອໃຫ້ຄົງຢູ່ຫຼັງຈາກ refresh ໜ້າ.
+*   **ໄຟລ໌:** `resources/js/stores/auth.js` (ສ້າງໄຟລ໌ນີ້)
+*   **ເນື້ອໃນ:**
+
+    ```javascript
+    import { defineStore } from 'pinia';
+    import axios from 'axios'; // ໃຊ້ axios ໂດຍກົງໃນ store
+
+    export const useAuthStore = defineStore('auth', {
+        state: () => ({
+            // ໂຫຼດຂໍ້ມູນຈາກ LocalStorage ເມື່ອ store ຖືກສ້າງ
+            user: JSON.parse(localStorage.getItem('user')) || null,
+            token: localStorage.getItem('token') || null,
+        }),
+        getters: {
+            isAuthenticated: (state) => !!state.token, // ກວດສອບວ່າມີ token ບໍ່
+            getUser: (state) => state.user, // ດຶງຂໍ້ມູນ user
+        },
+        actions: {
+            async login(credentials) {
+                try {
+                    const response = await axios.post('/api/auth/login', credentials);
+                    this.token = response.data.access_token;
+                    this.user = response.data.user;
+                    // ເກັບ token ແລະ user ໄວ້ໃນ LocalStorage
+                    localStorage.setItem('token', this.token);
+                    localStorage.setItem('user', JSON.stringify(this.user));
+                    return true;
+                } catch (error) {
+                    console.error('Login failed:', error);
+                    this.logout(); // ລຶບ state ບາງສ່ວນຖ້າມີ error
+                    throw error; // ສົ່ງ error ຕໍ່ໄປ
+                }
+            },
+            async logout() {
+                try {
+                    if (this.token) {
+                        // ຍິງ API logout ໄປຫາ backend
+                        await axios.post('/api/auth/logout', {}, {
+                            headers: {
+                                Authorization: `Bearer ${this.token}`,
+                            },
+                        });
+                    }
+                } catch (error) {
+                    console.error('Logout failed:', error);
+                } finally {
+                    // ລຶບ token ແລະ user ອອກຈາກ state ແລະ LocalStorage
+                    this.token = null;
+                    this.user = null;
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                }
+            },
+            async refreshToken() {
+                try {
+                    // ຂໍ token ໃໝ່
+                    const response = await axios.post('/api/auth/refresh', {}, {
+                        headers: {
+                            Authorization: `Bearer ${this.token}`,
+                        },
+                    });
+                    this.token = response.data.access_token;
+                    localStorage.setItem('token', this.token); // ອັບເດດ token ໃນ LocalStorage
+                    return true;
+                } catch (error) {
+                    console.error('Refresh token failed:', error);
+                    this.logout(); // ຖ້າ refresh ບໍ່ໄດ້, ໃຫ້ logout ເລີຍ
+                    throw error;
+                }
+            },
+            // Method ເພື່ອດຶງຂໍ້ມູນ user ຖ້າ token ມີແຕ່ user state ວ່າງເປົ່າ
+            async fetchUser() {
+                if (this.token && !this.user) {
+                    try {
+                        const response = await axios.get('/api/auth/me', {
+                            headers: {
+                                Authorization: `Bearer ${this.token}`,
+                            },
+                        });
+                        this.user = response.data;
+                        localStorage.setItem('user', JSON.stringify(this.user));
+                    } catch (error) {
+                        console.error('Failed to fetch user:', error);
+                        this.logout(); // ຖ້າດຶງຂໍ້ມູນ user ບໍ່ໄດ້, ໃຫ້ logout
+                    }
+                }
+            },
+        },
+    });
+    ```
+
+**ຂັ້ນຕອນທີ 4: ສ້າງ API Client (Axios Interceptors)**
+
+*   **ຄຳອະທິບາຍ:** ສ້າງ Axios instance ທີ່ຕັ້ງຄ່າໄວ້ລ່ວງໜ້າ, ໂດຍມີ interceptors ເພື່ອເພີ່ມ JWT token ໃສ່ທຸກ request ແລະຈັດການການ refresh token ໂດຍອັດຕະໂນມັດເມື່ອ token ໝົດອາຍຸ.
+*   **ໄຟລ໌:** `resources/js/api.js` (ສ້າງໄຟລ໌ນີ້)
+*   **ເນື້ອໃນ:**
+
+    ```javascript
+    import axios from 'axios';
+    import { useAuthStore } from './stores/auth'; // ນຳເຂົ້າ Auth Store
+
+    const api = axios.create({
+        baseURL: '/api', // ຕັ້ງ baseURL ໃຫ້ກົງກັບ API ຂອງ Laravel
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+    });
+
+    // Request Interceptor: ເພີ່ມ Authorization header
+    api.interceptors.request.use(
+        (config) => {
+            const authStore = useAuthStore();
+            if (authStore.token) {
+                config.headers.Authorization = `Bearer ${authStore.token}`;
+            }
+            return config;
+        },
+        (error) => {
+            return Promise.reject(error);
+        }
+    );
+
+    // Response Interceptor: ຈັດການ Refresh Token
+    api.interceptors.response.use(
+        (response) => {
+            return response;
+        },
+        async (error) => {
+            const authStore = useAuthStore();
+            const originalRequest = error.config;
+
+            // ຖ້າ error ແມ່ນ 401 Unauthorized ແລະບໍ່ແມ່ນ request login, ໃຫ້ລອງ refresh token
+            if (error.response.status === 401 && !originalRequest._retry) {
+                originalRequest._retry = true; // ໝາຍວ່າໄດ້ລອງແລ້ວ
+                try {
+                    await authStore.refreshToken(); // ລອງ refresh token
+                    // ຖ້າສຳເລັດ, ໃຫ້ເພີ່ມ token ໃໝ່ໃສ່ request ເດີມ ແລະລອງ request ອີກຄັ້ງ
+                    originalRequest.headers.Authorization = `Bearer ${authStore.token}`;
+                    return api(originalRequest);
+                } catch (refreshError) {
+                    // ຖ້າ refresh ບໍ່ສຳເລັດ, ໃຫ້ logout ຜູ້ໃຊ້
+                    authStore.logout();
+                    // ເຈົ້າອາດຈະຕ້ອງການ redirect ໄປໜ້າ login ຢູ່ທີ່ນີ້
+                    // import router ຈາກ vue-router ແລ້ວໃຊ້ router.push('/auth/login');
+                    return Promise.reject(refreshError);
+                }
+            }
+
+            return Promise.reject(error);
+        }
+    );
+
+    export default api; // Export Axios instance ທີ່ຕັ້ງຄ່າແລ້ວ
+    ```
+
+**ຂັ້ນຕອນທີ 5: ອັບເດດ `app.js` ເພື່ອໃຊ້ API Client**
+
+*   **ຄຳອະທິບາຍ:** ນຳເຂົ້າ `api.js` ທີ່ສ້າງຂຶ້ນ ແລະຕັ້ງຄ່າມັນໃຫ້ເປັນ global property ໃນ Vue app ເພື່ອໃຫ້ສາມາດໃຊ້ `this.$api` ໃນ components ໄດ້.
+*   **ໄຟລ໌:** `resources/js/app.js`
+*   **ການປ່ຽນແປງ:**
+
+    ```javascript
+    import './bootstrap';
+
+    import { createApp } from 'vue';
+    import App from './App.vue';
+    import Menu from './Components/Menu.vue';
+    import HeaderAdmin from './Components/HeaderAdmin.vue';
+    import router from './Router';
+    import feather from 'feather-icons';
+    import api from './api'; // ນຳເຂົ້າ api client ທີ່ສ້າງຂຶ້ນ
+
+    import VueSweetalert2 from 'vue-sweetalert2'
+    import 'sweetalert2/dist/sweetalert2.min.css'
+
+    import { createPinia } from 'pinia';
+    const pinia = createPinia();
+
+
+    const app = createApp(App);
+    app.use(pinia);
+    app.use(router);
+    app.component('Menu', Menu);
+    app.component('HeaderAdmin', HeaderAdmin);
+    app.use(VueSweetalert2)
+    app.config.globalProperties.$api = api; // ເຮັດໃຫ້ $api ສາມາດໃຊ້ໄດ້ທົ່ວໂລກ
+
+    app.mount('#app');
+
+    feather.replace()
+    ```
+
+**ຂັ້ນຕອນທີ 6: ອັບເດດ `UserLogin.vue`**
+
+*   **ຄຳອະທິບາຍ:** ເຊື່ອມຕໍ່ form login ກັບ Pinia Auth Store ເພື່ອຈັດການການເຂົ້າສູ່ລະບົບ.
+*   **ໄຟລ໌:** `resources/js/Pages/auth/UserLogin.vue`
+*   **ການປ່ຽນແປງ:**
+
+    ```vue
+    <template>
+       <div class="main-wrapper">
+                <div class="account-content">
+                    <div class="login-wrapper login-new">
+                        <div class="row w-100">
+                            <div class="col-lg-5 mx-auto">
+                                <div class="login-content user-login">
+                                    <div class="login-logo">
+                                        <!-- <img src="assets/img/logo.svg" alt="img"> -->
+                                        <a href="index.html" class="login-logo logo-white">
+                                            <!-- <img src="assets/img/logo-white.svg" alt="Img"> -->
+                                        </a>
+                                    </div>
+                                    <form @submit.prevent="login"> <!-- ປ່ຽນ action ເປັນ @submit.prevent -->
+                                        <div class="card">
+                                            <div class="card-body p-5">
+                                                <div class="login-userheading">
+                                                    <h3>Sign In</h3>
+                                                    <h4>Access the Dreamspos panel using your email and passcode.</h4>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Email <span class="text-danger"> *</span></label>
+                                                    <div class="input-group">
+                                                        <input type="text" v-model="email" class="form-control border-end-0"> <!-- ເພີ່ມ v-model -->
+                                                        <span class="input-group-text border-start-0">
+                                                            <i class="ti ti-mail"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Password <span class="text-danger"> *</span></label>
+                                                    <div class="pass-group">
+                                                        <input type="password" v-model="password" class="pass-input form-control"> <!-- ເພີ່ມ v-model -->
+                                                        <span class="ti toggle-password ti-eye-off text-gray-9"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-login authentication-check">
+                                                    <div class="row">
+                                                        <div class="col-12 d-flex align-items-center justify-content-between">
+                                                            <div class="custom-control custom-checkbox">
+                                                                <label class="checkboxs ps-4 mb-0 pb-0 line-height-1 fs-16 text-gray-6">
+                                                                    <input type="checkbox" class="form-control">
+                                                                    <span class="checkmarks"></span>Remember me
+                                                                </label>
+                                                            </div>
+                                                            <div class="text-end">
+                                                                <a class="text-orange fs-16 fw-medium" href="forgot-password.html">Forgot Password?</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-login">
+                                                    <button type="submit" class="btn btn-primary w-100">Sign In</button>
+                                                </div>
+                                                <div class="signinform">
+                                                    <h4>New on our platform?<a href="register.html" class="hover-a"> Create an account</a></h4>
+                                                </div>
+                                                <div class="form-setlogin or-text">
+                                                    <h4>OR</h4>
+                                                </div>
+                                                <div class="mt-2">
+                                                    <div class="d-flex align-items-center justify-content-center flex-wrap">
+                                                        <div class="text-center me-2 flex-fill">
+                                                            <a href="javascript:void(0);" class="br-10 p-2 btn btn-info d-flex align-items-center justify-content-center">
+                                                                <img class="img-fluid m-1" :src="url + '/assets/img/icons/facebook-logo.svg'" alt="Facebook">
+                                                            </a>
+                                                        </div>
+                                                        <div class="text-center me-2 flex-fill">
+                                                            <a href="javascript:void(0);" class="btn btn-white br-10 p-2  border d-flex align-items-center justify-content-center">
+                                                                <img class="img-fluid m-1" :src="url + '/assets/img/icons/google-logo.svg'" alt="Facebook">
+                                                            </a>
+                                                        </div>
+                                                        <div class="text-center flex-fill">
+                                                            <a href="javascript:void(0);" class="bg-dark br-10 p-2 btn btn-dark d-flex align-items-center justify-content-center">
+                                                                <img class="img-fluid m-1" :src="url + '/assets/img/icons/apple-logo.svg'" alt="Apple">
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="my-4 d-flex justify-content-center align-items-center copyright-text">
+                                    <p>Copyright © 2025 DreamsPOS</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </template>
+    <script>
+    import { useAuthStore } from '../../stores/auth'; // ນຳເຂົ້າ Auth Store
+    import { useRouter } from 'vue-router'; // ນຳເຂົ້າ useRouter
+
+    export default {
+        setup() {
+            const authStore = useAuthStore(); // ໃຊ້ Auth Store
+            const router = useRouter(); // ໃຊ້ useRouter
+            return { authStore, router }; // ສົ່ງຄືນເພື່ອໃຫ້ໃຊ້ໃນ template ແລະ methods
+        },
+        data() {
+            return {
+                url: window.location.origin,
+                email: '', // ເພີ່ມ data property ສຳລັບ email
+                password: '', // ເພີ່ມ data property ສຳລັບ password
+            }
+        },
+        methods: {
+            async login() {
+                try {
+                    // ເອີ້ນ action login ຈາກ Auth Store
+                    await this.authStore.login({
+                        email: this.email,
+                        password: this.password,
+                    });
+                    this.router.push('/admin/dashboard'); // Redirect ໄປໜ້າ dashboard ຫຼັງຈາກ login ສຳເລັດ
+                } catch (error) {
+                    // ສະແດງ error ຖ້າ login ບໍ່ສຳເລັດ
+                    alert('Login failed: ' + (error.response?.data?.message || error.message));
+                }
+            },
+        },
+    }
+    </script>
+    <style lang="">
+
+    </style>
+    ```
+
+**ຂັ້ນຕອນທີ 7: ອັບເດດ `UserList.vue`**
+
+*   **ຄຳອະທິບາຍ:** ປ່ຽນ `UserList.vue` ໃຫ້ດຶງຂໍ້ມູນ user ຈາກ API, ສະແດງຜົນ, ແລະຈັດການ CRUD ຜ່ານ modals.
+*   **ໄຟລ໌:** `resources/js/Pages/admin/UserList.vue`
+*   **ການປ່ຽນແປງ:** (ນີ້ຈະເປັນການປ່ຽນແປງທີ່ໃຫຍ່, ຂ້ອຍຈະໃຫ້ເນື້ອໃນເຕັມຂອງໄຟລ໌)
+
+    ```vue
+    <script setup>
+    import { ref, onMounted, computed } from 'vue';
+    import api from '../../api'; // ນຳເຂົ້າ api client
+    import Swal from 'sweetalert2'; // ນຳເຂົ້າ SweetAlert2
+
+    const url = window.location.origin;
+    const users = ref([]); // State ສຳລັບລາຍຊື່ users
+    const roles = ref([]); // State ສຳລັບລາຍຊື່ roles
+    const newUser = ref({ // State ສຳລັບ user ໃໝ່ (ສຳລັບ Add Modal)
+        first_name: '',
+        last_name: '',
+        email: '',
+        password: '',
+        password_confirmation: '',
+        phone_number: '',
+        role_id: '',
+        gender: '',
+        date_of_birth: '',
+    });
+    const editingUser = ref(null); // State ສຳລັບ user ທີ່ກຳລັງແກ້ໄຂ (ສຳລັບ Edit Modal)
+    const userToDelete = ref(null); // State ສຳລັບ user ທີ່ກຳລັງຈະລຶບ (ສຳລັບ Delete Modal)
+    const errors = ref({}); // State ສຳລັບ error validation
+
+    // Functions ສຳລັບການຄວບຄຸມ Modal (ໃຊ້ v-if/v-show ແລະ class binding)
+    const showAddModal = ref(false);
+    const showEditModal = ref(false);
+    const showDeleteModal = ref(false);
+
+    // Function ເພື່ອດຶງຂໍ້ມູນ Users ຈາກ API
+    const fetchUsers = async () => {
+        try {
+            const response = await api.get('/users'); // ຍິງ API ໄປທີ່ /api/users
+            users.value = response.data.data; // ສົມມຸດວ່າ pagination ສົ່ງຂໍ້ມູນໃນ .data.data
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            Swal.fire('Error', 'Failed to fetch users.', 'error'); // ສະແດງ error ດ້ວຍ SweetAlert2
+        }
+    };
+
+    // Function ເພື່ອດຶງຂໍ້ມູນ Roles ຈາກ API
+    const fetchRoles = async () => {
+        try {
+            const response = await api.get('/roles'); // ສົມມຸດວ່າເຈົ້າມີ API endpoint /api/roles
+            roles.value = response.data;
+        } catch (error) {
+            console.error('Error fetching roles:', error);
+        }
+    };
+
+    // Functions ສຳລັບເປີດ Modals
+    const openAddModal = () => {
+        newUser.value = { // ລ້າງຂໍ້ມູນ user ໃໝ່
+            first_name: '',
+            last_name: '',
+            email: '',
+            password: '',
+            password_confirmation: '',
+            phone_number: '',
+            role_id: '',
+            gender: '',
+            date_of_birth: '',
+        };
+        errors.value = {}; // ລ້າງ error
+        showAddModal.value = true;
+    };
+
+    const openEditModal = (user) => {
+        // Clone ຂໍ້ມູນ user ເພື່ອບໍ່ໃຫ້ກະທົບກັບຂໍ້ມູນຕົ້ນສະບັບໃນຕາຕະລາງ
+        editingUser.value = { ...user, password: '', password_confirmation: '' };
+        errors.value = {}; // ລ້າງ error
+        showEditModal.value = true;
+    };
+
+    const openDeleteModal = (user) => {
+        userToDelete.value = user;
+        showDeleteModal.value = true;
+    };
+
+    // Functions ສຳລັບ CRUD Operations
+    const addUser = async () => {
+        try {
+            await api.post('/users', newUser.value); // ຍິງ API POST ເພື່ອສ້າງ user
+            Swal.fire('Success', 'User added successfully!', 'success');
+            showAddModal.value = false; // ປິດ modal
+            fetchUsers(); // ໂຫຼດລາຍຊື່ users ໃໝ່
+        } catch (error) {
+            if (error.response && error.response.status === 422) {
+                errors.value = error.response.data.errors; // ສະແດງ error validation
+            } else {
+                console.error('Error adding user:', error);
+                Swal.fire('Error', 'Failed to add user.', 'error');
+            }
+        }
+    };
+
+    const updateUser = async () => {
+        try {
+            await api.put(`/users/${editingUser.value.id}`, editingUser.value); // ຍິງ API PUT ເພື່ອອັບເດດ user
+            Swal.fire('Success', 'User updated successfully!', 'success');
+            showEditModal.value = false; // ປິດ modal
+            fetchUsers(); // ໂຫຼດລາຍຊື່ users ໃໝ່
+        } catch (error) {
+            if (error.response && error.response.status === 422) {
+                errors.value = error.response.data.errors; // ສະແດງ error validation
+            } else {
+                console.error('Error updating user:', error);
+                Swal.fire('Error', 'Failed to update user.', 'error');
+            }
+        }
+    };
+
+    const deleteUser = async () => {
+        try {
+            await api.delete(`/users/${userToDelete.value.id}`); // ຍິງ API DELETE ເພື່ອລຶບ user
+            Swal.fire('Success', 'User deleted successfully!', 'success');
+            showDeleteModal.value = false; // ປິດ modal
+            fetchUsers(); // ໂຫຼດລາຍຊື່ users ໃໝ່
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            Swal.fire('Error', 'Failed to delete user.', 'error');
+        }
+    };
+
+    // ເອີ້ນ functions ເມື່ອ component ຖືກ mounted
+    onMounted(() => {
+        fetchUsers();
+        fetchRoles(); // ດຶງ roles ມາສະແດງໃນ dropdown
+    });
+
+    // Computed property ຫຼື Function ເພື່ອສະແດງຊື່ Role
+    const getRoleName = (roleId) => {
+        const role = roles.value.find(r => r.id === roleId);
+        return role ? role.role_name : 'N/A';
+    };
+
+    // Function ເພື່ອສ້າງ URL ຮູບພາບ
+    const getImageUrl = (imagePath) => {
+        if (imagePath) {
+            return `${url}/storage/${imagePath}`; // ສົມມຸດວ່າຮູບພາບຖືກເກັບໄວ້ໃນ storage/app/public
+        }
+        return `${url}/assets/img/users/user-default.png`; // ຮູບພາບ default
+    };
+
+    </script>
+
+    <template>
+        <div>
+            <div class="page-header">
+                <div class="add-item d-flex">
+                    <div class="page-title">
+                        <h4 class="fw-bold">Users</h4>
+                        <h6>Manage your users</h6>
+                    </div>
+                </div>
+                <ul class="table-top-head">
+                    <li>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Pdf" data-bs-original-title="Pdf"><img :src="url + '/assets/img/icons/pdf.svg'" alt="img"></a>
+                    </li>
+                    <li>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Excel" data-bs-original-title="Excel"><img :src="url + '/assets/img/icons/excel.svg'" alt="img"></a>
+                    </li>
+                    <li>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Refresh" data-bs-original-title="Refresh" @click="fetchUsers"><i class="ti ti-refresh"></i></a>
+                    </li>
+                    <li>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" id="collapse-header" aria-label="Collapse" data-bs-original-title="Collapse"><i class="ti ti-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="page-btn">
+                    <a href="#" class="btn btn-primary" @click="openAddModal"><i class="ti ti-circle-plus me-1"></i>Add User</a>
+                </div>
+            </div>
+
+            <!-- /product list -->
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
+                    <div class="search-set">
+                        <div class="search-input">
+                            <span class="btn-searchset"><i class="ti ti-search fs-14 feather-search"></i></span>
+                            <div id="DataTables_Table_0_filter" class="dataTables_filter"><label> <input type="search" class="form-control form-control-sm" placeholder="Search" aria-controls="DataTables_Table_0"></label></div>
+                        </div>
+                    </div>
+                    <div class="d-flex table-dropdown my-xl-auto right-content align-items-center flex-wrap row-gap-3">
+                        <div class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle btn btn-white btn-md d-inline-flex align-items-center" data-bs-toggle="dropdown">
+                                Status
+                            </a>
+                            <ul class="dropdown-menu  dropdown-menu-end p-3">
+                                <li>
+                                    <a href="javascript:void(0);" class="dropdown-item rounded-1">Active</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" class="dropdown-item rounded-1">Inactive</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer table-responsive">
+                            <table class="table datatable dataTable no-footer" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th class="no-sort sorting sorting_asc" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label=": activate to sort column descending" style="width: 35px;" aria-sort="ascending">
+                                            <label class="checkboxs">
+                                                <input type="checkbox" id="select-all">
+                                                <span class="checkmarks"></span>
+                                            </label>
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="User Name: activate to sort column ascending" style="width: 138.805px;">User Name</th>
+                                        <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Phone: activate to sort column ascending" style="width: 94.8047px;">Phone</th>
+                                        <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Email: activate to sort column ascending" style="width: 144.555px;">Email</th>
+                                        <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Role: activate to sort column ascending" style="width: 91.3828px;">Role</th>
+                                        <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style="width: 49.2734px;">Status</th>
+                                        <th class="no-sort sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label=": activate to sort column ascending" style="width: 106px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="user in users" :key="user.id">
+                                        <td class="sorting_1">
+                                            <label class="checkboxs">
+                                                <input type="checkbox">
+                                                <span class="checkmarks"></span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <a href="javascript:void(0);" class="avatar avatar-md me-2">
+                                                    <img :src="getImageUrl(user.profile_image_url)" alt="product">
+                                                </a>
+                                                <a href="javascript:void(0);">{{ user.first_name }} {{ user.last_name }}</a>
+                                            </div>
+                                        </td>
+                                        <td>{{ user.phone_number }}</td>
+                                        <td>{{ user.email }}</td>
+                                        <td>{{ getRoleName(user.role_id) }}</td>
+                                        <td><span class="d-inline-flex align-items-center p-1 pe-2 rounded-1 text-white bg-success fs-10"><i class="ti ti-point-filled me-1 fs-11"></i>Active</span></td>
+                                        <td class="action-table-data">
+                                            <div class="edit-delete-action">
+                                                <a class="me-2 p-2 mb-0" href="javascript:void(0);">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye action-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                                </a>
+                                                <a class="me-2 p-2 mb-0" @click="openEditModal(user)">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                                </a>
+                                                <a @click="openDeleteModal(user)" class="p-2 mb-0" href="javascript:void(0);">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="d-flex">
+                            <div class=" p-2 d-flex align-items-center ">
+                                <label class="me-2"> ສະແດງ</label>
+                                <select class="form-select form-select-sm me-2">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                                <div class=" text-nowrap " role="status" aria-live="polite">1 - {{ users.length }} of {{ users.length }} items</div>
+                            </div>
+                            <div class="w-100">
+                                <div class="dataTables_paginate d-flex justify-content-end">
+                                    <ul class="pagination">
+                                        <li class="paginate_button page-item previous disabled" id="DataTables_Table_0_previous">
+                                            <a aria-controls="DataTables_Table_0" aria-disabled="true" role="link" data-dt-idx="previous" tabindex="-1" class="page-link">
+                                                <i class="fa fa-angle-left"></i>
+                                            </a>
+                                        </li>
+                                        <li class="paginate_button page-item active">
+                                            <a href="#" aria-controls="DataTables_Table_0" role="link" aria-current="page" data-dt-idx="0" tabindex="0" class="page-link">1
+                                            </a>
+                                        </li>
+                                        <li class="paginate_button page-item next disabled" id="DataTables_Table_0_next"><a aria-controls="DataTables_Table_0" aria-disabled="true" role="link" data-dt-idx="next" tabindex="-1" class="page-link">
+                                            <i class=" fa fa-angle-right"></i>
+                                        </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /product list -->
+
+            <!-- Add User Modal -->
+            <div class="modal fade" id="add-user" tabindex="-1" aria-labelledby="addUserLabel" aria-hidden="true" :class="{ 'show d-block': showAddModal }">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="page-wrapper-new p-0">
+                            <div class="content">
+                                <div class="modal-header">
+                                    <div class="page-title">
+                                        <h4>Add User</h4>
+                                    </div>
+                                    <button type="button" class="close" @click="showAddModal = false" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form @submit.prevent="addUser">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="new-employee-field">
+                                                    <div class="profile-pic-upload mb-2">
+                                                        <div class="profile-pic">
+                                                            <span><i data-feather="plus-circle" class="plus-down-add"></i>Add Image</span>
+                                                        </div>
+                                                        <div class="mb-0">
+                                                            <div class="image-upload mb-0">
+                                                                <input type="file">
+                                                                <div class="image-uploads">
+                                                                    <h4>Upload Image</h4>
+                                                                </div>
+                                                            </div>
+                                                            <p class="fs-13 mt-2">JPEG, PNG up to 2 MB</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">First Name<span class="text-danger ms-1">*</span></label>
+                                                    <input type="text" class="form-control" v-model="newUser.first_name">
+                                                    <span v-if="errors.first_name" class="text-danger">{{ errors.first_name[0] }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Last Name<span class="text-danger ms-1">*</span></label>
+                                                    <input type="text" class="form-control" v-model="newUser.last_name">
+                                                    <span v-if="errors.last_name" class="text-danger">{{ errors.last_name[0] }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Role<span class="text-danger ms-1">*</span></label>
+                                                    <select class="form-select" v-model="newUser.role_id">
+                                                        <option value="">Select</option>
+                                                        <option v-for="role in roles" :key="role.id" :value="role.id">{{ role.role_name }}</option>
+                                                    </select>
+                                                    <span v-if="errors.role_id" class="text-danger">{{ errors.role_id[0] }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Email<span class="text-danger ms-1">*</span></label>
+                                                    <input type="email" class="form-control" v-model="newUser.email">
+                                                    <span v-if="errors.email" class="text-danger">{{ errors.email[0] }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Phone<span class="text-danger ms-1">*</span></label>
+                                                    <input type="tel" class="form-control" v-model="newUser.phone_number">
+                                                    <span v-if="errors.phone_number" class="text-danger">{{ errors.phone_number[0] }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Gender<span class="text-danger ms-1">*</span></label>
+                                                    <select class="form-select" v-model="newUser.gender">
+                                                        <option value="">Select</option>
+                                                        <option value="Male">Male</option>
+                                                        <option value="Female">Female</option>
+                                                        <option value="Other">Other</option>
+                                                    </select>
+                                                    <span v-if="errors.gender" class="text-danger">{{ errors.gender[0] }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Date of Birth<span class="text-danger ms-1">*</span></label>
+                                                    <input type="date" class="form-control" v-model="newUser.date_of_birth">
+                                                    <span v-if="errors.date_of_birth" class="text-danger">{{ errors.date_of_birth[0] }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Password<span class="text-danger ms-1">*</span></label>
+                                                    <div class="pass-group">
+                                                        <input type="password" class="pass-input form-control" v-model="newUser.password">
+                                                        <i class="ti ti-eye-off toggle-password"></i>
+                                                    </div>
+                                                    <span v-if="errors.password" class="text-danger">{{ errors.password[0] }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Confirm Password<span class="text-danger ms-1">*</span></label>
+                                                    <div class="pass-group">
+                                                        <input type="password" class="pass-input form-control" v-model="newUser.password_confirmation">
+                                                        <i class="ti ti-eye-off toggle-password"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="status-toggle modal-status d-flex justify-content-between align-items-center">
+                                                    <span class="status-label">Status</span>
+                                                    <input type="checkbox" id="user1" class="check" checked="">
+                                                    <label for="user1" class="checktoggle"> </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn me-2 btn-secondary" @click="showAddModal = false">Cancel</button>
+                                        <button type="submit" class="btn btn-primary">Add User</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Add User Modal -->
+
+            <!-- Edit User Modal -->
+            <div class="modal fade" id="edit-user" tabindex="-1" aria-labelledby="editUserLabel" aria-hidden="true" :class="{ 'show d-block': showEditModal }">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="page-wrapper-new p-0">
+                            <div class="content">
+                                <div class="modal-header">
+                                    <div class="page-title">
+                                        <h4>Edit User</h4>
+                                    </div>
+                                    <button type="button" class="close" @click="showEditModal = false" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form @submit.prevent="updateUser">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="new-employee-field">
+                                                    <div class="profile-pic-upload mb-2">
+                                                        <div class="profile-pic">
+                                                            <span><i data-feather="plus-circle" class="plus-down-add"></i>Add Image</span>
+                                                        </div>
+                                                        <div class="mb-0">
+                                                            <div class="image-upload mb-0">
+                                                                <input type="file">
+                                                                <div class="image-uploads">
+                                                                    <h4>Upload Image</h4>
+                                                                </div>
+                                                            </div>
+                                                            <p class="fs-13 mt-2">JPEG, PNG up to 2 MB</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">First Name<span class="text-danger ms-1">*</span></label>
+                                                    <input type="text" class="form-control" v-model="editingUser.first_name">
+                                                    <span v-if="errors.first_name" class="text-danger">{{ errors.first_name[0] }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Last Name<span class="text-danger ms-1">*</span></label>
+                                                    <input type="text" class="form-control" v-model="editingUser.last_name">
+                                                    <span v-if="errors.last_name" class="text-danger">{{ errors.last_name[0] }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Role<span class="text-danger ms-1">*</span></label>
+                                                    <select class="form-select" v-model="editingUser.role_id">
+                                                        <option value="">Select</option>
+                                                        <option v-for="role in roles" :key="role.id" :value="role.id">{{ role.role_name }}</option>
+                                                    </select>
+                                                    <span v-if="errors.role_id" class="text-danger">{{ errors.role_id[0] }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Email<span class="text-danger ms-1">*</span></label>
+                                                    <input type="email" class="form-control" v-model="editingUser.email">
+                                                    <span v-if="errors.email" class="text-danger">{{ errors.email[0] }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Phone<span class="text-danger ms-1">*</span></label>
+                                                    <input type="tel" class="form-control" v-model="editingUser.phone_number">
+                                                    <span v-if="errors.phone_number" class="text-danger">{{ errors.phone_number[0] }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Gender<span class="text-danger ms-1">*</span></label>
+                                                    <select class="form-select" v-model="editingUser.gender">
+                                                        <option value="">Select</option>
+                                                        <option value="Male">Male</option>
+                                                        <option value="Female">Female</option>
+                                                        <option value="Other">Other</option>
+                                                    </select>
+                                                    <span v-if="errors.gender" class="text-danger">{{ errors.gender[0] }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Date of Birth<span class="text-danger ms-1">*</span></label>
+                                                    <input type="date" class="form-control" v-model="editingUser.date_of_birth">
+                                                    <span v-if="errors.date_of_birth" class="text-danger">{{ errors.date_of_birth[0] }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Password</label>
+                                                    <div class="pass-group">
+                                                        <input type="password" class="pass-input form-control" v-model="editingUser.password">
+                                                        <i class="ti ti-eye-off toggle-password"></i>
+                                                    </div>
+                                                    <span v-if="errors.password" class="text-danger">{{ errors.password[0] }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Confirm Password</label>
+                                                    <div class="pass-group">
+                                                        <input type="password" class="pass-input form-control" v-model="editingUser.password_confirmation">
+                                                        <i class="ti ti-eye-off toggle-password"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="status-toggle modal-status d-flex justify-content-between align-items-center">
+                                                    <span class="status-label">Status</span>
+                                                    <input type="checkbox" id="user-edit-status" class="check" checked="">
+                                                    <label for="user-edit-status" class="checktoggle"> </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn me-2 btn-secondary" @click="showEditModal = false">Cancel</button>
+                                        <button type="submit" class="btn btn-primary">Update User</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Edit User Modal -->
+
+            <!-- Delete User Modal -->
+            <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="deleteUserLabel" aria-hidden="true" :class="{ 'show d-block': showDeleteModal }">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteUserLabel">Confirm Delete</h5>
+                            <button type="button" class="btn-close" @click="showDeleteModal = false" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to delete user <strong>{{ userToDelete ? userToDelete.first_name + ' ' + userToDelete.last_name : '' }}</strong>?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @click="showDeleteModal = false">Cancel</button>
+                            <button type="button" class="btn btn-danger" @click="deleteUser">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Delete User Modal -->
+        </div>
+    </template>
+
+    <style>
+    /* ເພີ່ມ CSS ນີ້ເພື່ອໃຫ້ modal ສະແດງຜົນຖືກຕ້ອງ */
+    .modal.show {
+        display: block;
+        background: rgba(0, 0, 0, 0.5);
+    }
+    </style>
+    ```
+
+**ຂັ້ນຕອນທີ 8: ອັບເດດ Router (ຖ້າຈຳເປັນ)**
+
+*   **ຄຳອະທິບາຍ:** ໃຫ້ແນ່ໃຈວ່າ router ຂອງເຈົ້າຈັດການການ redirect ຫຼັງຈາກ login/logout ຢ່າງຖືກຕ້ອງ ແລະປ້ອງກັນ routes ທີ່ຕ້ອງການ authentication.
+*   **ໄຟລ໌:** `resources/js/Router/index.js`
+*   **ການປ່ຽນແປງ:** (ຈາກໄຟລ໌ທີ່ເຈົ້າໃຫ້ມາ, ມັນມີ logic ພື້ນຖານຢູ່ແລ້ວ, ແຕ່ຂ້ອຍຈະເພີ່ມ `useAuthStore` ແລະ `fetchUser` ເຂົ້າໄປໃນ `beforeEach` ເພື່ອໃຫ້ແນ່ໃຈວ່າ user state ຖືກໂຫຼດເມື່ອມີ token)
+
+    ```javascript
+    import { createRouter, createWebHistory } from 'vue-router';
+    import { useAuthStore } from '../stores/auth'; // ນຳເຂົ້າ Pinia auth store
+
+    // --- ນຳເຂົ້າ Layouts (ຮັກສາໄວ້ແບບ static ເພາະຈຳເປັນຕ້ອງໃຊ້ຕະຫຼອດ) ---
+    import AdminLayout from '../Layouts/AdminLayout.vue';
+    import CustomerLayout from '../Layouts/CustomerLayout.vue';
+    import AuthLayout from '../Layouts/AuthLayout.vue';
+
+
+    // --- Functions ສຳລັບການຢືນຢັນຕົວຕົນ / ການອະນຸຍາດ ---
+    const isAuthenticated = () => {
+        const store = useAuthStore(); // ໃຊ້ useAuthStore
+        return store.isAuthenticated; // ໃຊ້ getter ຈາກ store
+    };
+
+    const isAdmin = () => {
+        const store = useAuthStore(); // ໃຊ້ useAuthStore
+        return store.getUser && store.getUser.role_id === 1; // ສົມມຸດວ່າ role_id 1 ແມ່ນ Admin
+    };
+    // --- ສິ້ນສຸດ Functions ການຢືນຢັນຕົວຕົນ ---
+
+
+    const routes = [
+        // --- ເສັ້ນທາງສຳລັບລູກຄ້າ/ທົ່ວໄປ (ໃຊ້ CustomerLayout) ---
+        {
+            path: '/',
+            component: CustomerLayout,
+            children: [
+                {
+                    path: '',
+                    name: 'home',
+                    component: () => import('../Pages/customer/HomePage.vue'),
+                    meta: { requiresAuth: false },
+                },
+                {
+                    path: 'browse-cars',
+                    name: 'browse.cars',
+                    component: () => import('../Pages/customer/BrowseCars.vue'),
+                    meta: { requiresAuth: false }
+                },
+                {
+                    path: 'book-car',
+                    name: 'book.car',
+                    component: () => import('../Pages/customer/BookingForm.vue'),
+                    meta: { requiresAuth: false }
+                },
+                {
+                    path: 'my-bookings',
+                    name: 'my.bookings',
+                    component: () => import('../Pages/customer/MyBookings.vue'),
+                    meta: { requiresAuth: true },
+                },
+                {
+                    path: 'my-rental-history',
+                    name: 'my.rental.history',
+                    component: () => import('../Pages/customer/MyRentalHistory.vue'),
+                    meta: { requiresAuth: true },
+                },
+            ]
+        },
+
+        // --- ເສັ້ນທາງສຳລັບການຢືນຢັນຕົວຕົນ (ໃຊ້ AuthLayout) ---
+        {
+            path: '/auth',
+            component: AuthLayout,
+            children: [
+                {
+                    path: 'login',
+                    name: 'auth.login',
+                    component: () => import('../Pages/auth/UserLogin.vue'),
+                    meta: { requiresAuth: false }
+                },
+                {
+                    path: 'register',
+                    name: 'auth.register',
+                    component: () => import('../Pages/auth/UserRegister.vue'),
+                    meta: { requiresAuth: false }
+                },
+            ]
+        },
+
+        // --- ເສັ້ນທາງສຳລັບ Admin (ໃຊ້ AdminLayout) ---
+        {
+            path: '/admin',
+            component: AdminLayout,
+            children: [
+                { path: '', redirect: { name: 'admin.dashboard' } },
+                {
+                    path: 'dashboard',
+                    name: 'admin.dashboard',
+                    component: () => import('../Pages/admin/AdminDashboard.vue'),
+                    meta: { requiresAuth: true, requiresAdmin: true },
+                },
+                {
+                    path: 'bookings/list',
+                    name: 'admin.bookings.list',
+                    component: () => import('../Pages/admin/BookingsList.vue'),
+                    meta: { requiresAuth: true, requiresAdmin: true },
+                },
+                {
+                    path: 'bookings/payments',
+                    name: 'admin.bookings.payments',
+                    component: () => import('../Pages/admin/PaymentsReview.vue'),
+                    meta: { requiresAuth: true, requiresAdmin: true },
+                },
+                {
+                    path: 'customer/list',
+                    name: 'admin.customer.list',
+                    component: () => import('../Pages/admin/CustomerList.vue'),
+                    meta: { requiresAuth: true, requiresAdmin: true },
+                },
+                {
+                    path: 'cars/list',
+                    name: 'admin.cars.list',
+                    component: () => import('../Pages/admin/CarList.vue'),
+                    meta: { requiresAuth: true, requiresAdmin: true },
+                },
+                {
+                    path: 'cars/types',
+                    name: 'admin.cars.types',
+                    component: () => import('../Pages/admin/CarTypes.vue'),
+                    meta: { requiresAuth: true, requiresAdmin: true },
+                },
+                {
+                    path: 'drivers/list',
+                    name: 'admin.drivers.list',
+                    component: () => import('../Pages/admin/DriverList.vue'),
+                    meta: { requiresAuth: true, requiresAdmin: true },
+                },
+                {
+                    path: 'finance/add',
+                    name: 'admin.finance.add',
+                    component: () => import('../Pages/admin/FinanceAddTransaction.vue'),
+                    meta: { requiresAuth: true, requiresAdmin: true },
+                },
+                {
+                    path: 'finance/transactions',
+                    name: 'admin.finance.transactions',
+                    component: () => import('../Pages/admin/FinanceTransactionsList.vue'),
+                    meta: { requiresAuth: true, requiresAdmin: true },
+                },
+                {
+                    path: 'users/list',
+                    name: 'admin.users.list',
+                    component: () => import('../Pages/admin/UserList.vue'),
+                    meta: { requiresAuth: true, requiresAdmin: true },
+                },
+                {
+                    path: 'users/roles-permissions',
+                    name: 'admin.users.roles',
+                    component: () => import('../Pages/admin/RolesPermissions.vue'),
+                    meta: { requiresAuth: true, requiresAdmin: true },
+                },
+                {
+                    path: 'reports/bookings',
+                    name: 'admin.reports.bookings',
+                    component: () => import('../Pages/admin/ReportBookings.vue'),
+                    meta: { requiresAuth: true, requiresAdmin: true },
+                },
+                {
+                    path: 'reports/car-status',
+                    name: 'admin.reports.carstatus',
+                    component: () => import('../Pages/admin/ReportCarStatus.vue'),
+                    meta: { requiresAuth: true, requiresAdmin: true },
+                },
+                {
+                    path: 'reports/payments',
+                    name: 'admin.reports.payments',
+                    component: () => import('../Pages/admin/ReportPayments.vue'),
+                    meta: { requiresAuth: true, requiresAdmin: true },
+                },
+                {
+                    path: 'reports/finance',
+                    name: 'admin.reports.finance',
+                    component: () => import('../Pages/admin/ReportFinance.vue'),
+                    meta: { requiresAuth: true, requiresAdmin: true },
+                },
+                {
+                    path: 'settings',
+                    name: 'admin.settings',
+                    component: () => import('../Pages/admin/AdminSettings.vue'),
+                    meta: { requiresAuth: true, requiresAdmin: true },
+                },
+            ]
+        },
+
+        // --- ບໍ່ພົບ (ຕ້ອງເປັນເສັ້ນທາງສຸດທ້າຍ) ---
+        {
+            path: '/:pathMatch(.*)*',
+            name: 'not-found',
+            component: () => import('../Pages/NotFound.vue'),
+        },
+    ];
+
+    const router = createRouter({
+        history: createWebHistory(),
+        routes,
+        scrollBehavior(to, from, savedPosition) {
+            return { top: 0 };
+        },
+    });
+
+    // --- Navigation Guards ---
+    router.beforeEach(async (to, from, next) => { // ເພີ່ມ async
+        const authStore = useAuthStore(); // ໃຊ້ Auth Store
+
+        // ໂຫຼດຂໍ້ມູນ user ຖ້າມີ token ແຕ່ user state ວ່າງເປົ່າ
+        if (authStore.token && !authStore.user) {
+            await authStore.fetchUser();
+        }
+
+        const isAdminRoute = to.matched.some(record => record.path.startsWith('/admin'));
+
+        if (to.meta.requiresAuth || isAdminRoute) {
+            if (!isAuthenticated()) {
+                console.log('ຜູ້ໃຊ້ບໍ່ໄດ້ເຂົ້າສູ່ລະບົບ, ກຳລັງປ່ຽນເສັ້ນທາງໄປໜ້າເຂົ້າສູ່ລະບົບ.');
+                next({ name: 'auth.login' });
+            } else {
+                if (isAdminRoute) {
+                    if (isAdmin()) {
+                        console.log('ຜູ້ໃຊ້ໄດ້ເຂົ້າສູ່ລະບົບ ແລະເປັນ admin. ອະນຸຍາດໃຫ້ເຂົ້າເຖິງເສັ້ນທາງ admin.');
+                        next();
+                    } else {
+                        console.log('ຜູ້ໃຊ້ໄດ້ເຂົ້າສູ່ລະບົບແລ້ວ ແຕ່ບໍ່ແມ່ນ admin. ກຳລັງປ່ຽນເສັ້ນທາງຈາກ admin route ໄປໜ້າຫຼັກ.');
+                        next({ name: 'home' });
+                    }
+                } else {
+                    console.log('ຜູ້ໃຊ້ໄດ້ເຂົ້າສູ່ລະບົບແລ້ວ. ອະນຸຍາດໃຫ້ເຂົ້າເຖິງເສັ້ນທາງທີ່ຖືກປ້ອງກັນທີ່ບໍ່ແມ່ນ admin.');
+                    next();
+                }
+            }
+        } else {
+            console.log('ເສັ້ນທາງບໍ່ຕ້ອງການການຢືນຢັນຕົວຕົນ. ອະນຸຍາດໃຫ້ເຂົ້າເຖິງ.');
+
+            if (to.name === 'auth.login') {
+                if (isAuthenticated()) {
+                    if (authStore.getUser && authStore.getUser.role_id === 1) { // ສົມມຸດວ່າ role_id 1 ແມ່ນ Admin
+                        console.log('Admin ທີ່ເຂົ້າສູ່ລະບົບພະຍາຍາມເຂົ້າເຖິງໜ້າເຂົ້າສູ່ລະບົບ, ກຳລັງປ່ຽນເສັ້ນທາງໄປ dashboard admin.');
+                        next({ name: 'admin.dashboard' });
+                    } else {
+                        console.log('ລູກຄ້າທີ່ເຂົ້າສູ່ລະບົບພະຍາຍາມເຂົ້າເຖິງໜ້າເຂົ້າສູ່ລະບົບ, ກຳລັງປ່ຽນເສັ້ນທາງໄປໜ້າຫຼັກ.');
+                        next({ name: 'home' });
+                    }
+                } else {
+                    next();
+                }
+            } else {
+                next();
+            }
+        }
+    });
+
+    export default router;
+    ```
+
+---
+
+**ຂັ້ນຕອນສຸດທ້າຍ: Compile Frontend Assets**
+
+*   **ຄຳອະທິບາຍ:** ຫຼັງຈາກການປ່ຽນແປງໄຟລ໌ Vue ທັງໝົດ, ເຈົ້າຈຳເປັນຕ້ອງ compile frontend assets ໃໝ່.
+*   **ຄຳສັ່ງ:**
+    ```bash
+    npm run dev
+    # ຫຼືສຳລັບ production
+    # npm run build
+    ```
+
+---
+
+**ສິ່ງທີ່ຕ້ອງກວດສອບຫຼັງຈາກສຳເລັດ:**
+
+1.  **ຖານຂໍ້ມູນ:** ໃຫ້ແນ່ໃຈວ່າເຈົ້າມີຕາຕະລາງ `users` ແລະ `roles` ທີ່ຖືກຕ້ອງ, ແລະມີຂໍ້ມູນ `roles` ຢ່າງໜ້ອຍໜຶ່ງອັນ (ເຊັ່ນ: `id: 1, role_name: 'Admin'`).
+2.  **User Test:** ສ້າງ user ທົດສອບໃນຖານຂໍ້ມູນດ້ວຍ role_id ທີ່ຖືກຕ້ອງ (ເຊັ່ນ: email: `admin@example.com`, password: `password`, role_id: `1`).
+3.  **API Test:** ໃຊ້ Postman ຫຼື Insomnia ລອງຍິງ API ໄປທີ່ `/api/auth/login` ເພື່ອທົດສອບການ login. ຈາກນັ້ນລອງຍິງ `/api/users` ດ້ວຍ token ທີ່ໄດ້ຮັບ.
+4.  **Frontend Test:** ລອງເຂົ້າສູ່ລະບົບຜ່ານ `UserLogin.vue` ແລະເຂົ້າໄປທີ່ໜ້າ `UserList.vue` ເພື່ອທົດສອບ CRUD.

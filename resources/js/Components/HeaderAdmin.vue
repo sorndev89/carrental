@@ -341,7 +341,7 @@
 							<a class="dropdown-item" href="sales-report.html"><i class="ti ti-file-text me-2"></i>Reports</a>
 							<a class="dropdown-item" href="general-settings.html"><i class="ti ti-settings-2 me-2"></i>Settings</a>
 							<hr class="my-2">
-							<a class="dropdown-item logout pb-0" href="signin.html"><i class="ti ti-logout me-2"></i>Logout</a>
+							<a class="dropdown-item logout pb-0" href="javascript:void(0);" @click="handleLogout"><i class="ti ti-logout me-2"></i>Logout</a>
 						</div>
 					</li>
 				</ul>
@@ -354,7 +354,7 @@
 					<div class="dropdown-menu dropdown-menu-right">
 						<a class="dropdown-item" href="profile.html">My Profile</a>
 						<a class="dropdown-item" href="general-settings.html">Settings</a>
-						<a class="dropdown-item" href="signin.html">Logout</a>
+						<a class="dropdown-item" href="javascript:void(0);" @click="handleLogout">Logout</a>
 					</div>
 				</div>
 				<!-- /Mobile Menu -->
@@ -362,6 +362,8 @@
 		</div>
 </template>
 <script>
+import { useAuthStore } from '@/Stores/Auth.js';
+
 export default {
     data() {
         return {
@@ -369,6 +371,19 @@ export default {
             ShowMenuMobile:false
         }
     },
+    methods: {
+        async handleLogout() {
+            const authStore = useAuthStore();
+            // const router = useRouter();
+            try {
+                await authStore.logout();
+                // router.push('/login'); // Redirect to login page after logout
+				this.$router.push('/auth/login');
+            } catch (error) {
+                console.error('Logout failed:', error);
+            }
+        }
+    }
 }
 </script>
 <style lang="">

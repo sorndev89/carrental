@@ -1,0 +1,144 @@
+ໂຄງສ້າງຖານຂໍ້ມູນ (Database Schema) - ສະບັບປັບປຸງ
+
+
+  1. `users` Table (ຜູ້ໃຊ້ລະບົບ: Admin, Staff)
+   * id: INT, PK, Auto-increment
+   * first_name: VARCHAR
+   * last_name: VARCHAR
+   * gender: VARCHAR
+   * email: VARCHAR, UNIQUE
+   * password: VARCHAR
+   * phone_number: VARCHAR, NULLABLE
+   * profile_image_url: VARCHAR, NULLABLE (Path to image in public/assets/img/)
+   * role_id: INT, FK to roles.id
+   * status: VARCHAR (e.g., 'active', 'inactive')
+   * created_at, updated_at: TIMESTAMP
+
+
+  2. `roles` Table (ບົດບາດຜູ້ໃຊ້)
+   * id: INT, PK, Auto-increment
+   * name: VARCHAR, UNIQUE (e.g., 'Admin', 'Staff', 'Customer')
+   * status: VARCHAR (e.g., 'active', 'inactive')
+   * permissions: JSON (Array of permission keys, e.g., ['view_bookings', 'manage_users'])
+   * created_at, updated_at: TIMESTAMP
+
+
+  3. `permissions` Table (ສິດທິການເຂົ້າເຖິງ)
+   * id: INT, PK, Auto-increment
+   * name: VARCHAR, UNIQUE (ຊື່ທີ່ສະແດງ)
+   * key: JSON (Array of specific permission keys, e.g., ['bookings.view', 'bookings.edit'])
+   * created_at, updated_at: TIMESTAMP
+
+
+  4. `settings` Table (ການຕັ້ງຄ່າລະບົບ)
+   * id: INT, PK, Auto-increment
+   * key: VARCHAR, UNIQUE (ຊື່ການຕັ້ງຄ່າ, e.g., 'site_name', 'contact_email')
+   * value: TEXT (ຄ່າຂອງການຕັ້ງຄ່າ)
+   * created_at, updated_at: TIMESTAMP
+
+
+  5. `car_types` Table (ປະເພດລົດ)
+   * id: INT, PK, Auto-increment
+   * name: VARCHAR, UNIQUE (e.g., 'Sedan', 'SUV', 'Truck')
+   * description: TEXT, NULLABLE
+   * created_at, updated_at: TIMESTAMP
+
+
+  6. `cars` Table (ຂໍ້ມູນລົດ)
+   * id: INT, PK, Auto-increment
+   * car_type_id: INT, FK to car_types.id
+   * make: VARCHAR (ຍີ່ຫໍ້, e.g., 'Toyota')
+   * model: VARCHAR (ລຸ້ນ, e.g., 'Vios')
+   * license_plate: VARCHAR, UNIQUE (ປ້າຍທະບຽນ)
+   * daily_rate: DECIMAL (ລາຄາເຊົ່າຕໍ່ມື້)
+   * image_url: VARCHAR, NULLABLE (Path to image in public/assets/img/cars/)
+   * status: ENUM ('available', 'rented', 'maintenance')
+   * created_at, updated_at: TIMESTAMP
+
+
+  7. `customers` Table (ຂໍ້ມູນລູກຄ້າ)
+   * id: INT, PK, Auto-increment
+   * first_name: VARCHAR
+   * last_name: VARCHAR, NULLABLE
+   * gender: VARCHAR
+   * email: VARCHAR, UNIQUE
+   * phone_number: VARCHAR
+   * address: VARCHAR, NULLABLE
+   * id_card_number: VARCHAR, NULLABLE
+   * driver_license_number: VARCHAR, NULLABLE
+   * license_expiry_date: DATE, NULLABLE
+   * profile_image_url: VARCHAR, NULLABLE (Path to image in public/assets/img/customers/)
+   * created_at, updated_at: TIMESTAMP
+       * ໝາຍເຫດ: ຕາຕະລາງ customers ນີ້ແຍກອອກຈາກ users ຢ່າງຊັດເຈນ. ຖ້າລູກຄ້າສາມາດ Login ໄດ້, ຄວນມີ user_id FK ທີ່ເຊື່ອມກັບ users ຫຼື ໃຊ້ຕາຕະລາງ
+         users ເປັນທັງ Admin/Staff ແລະ Customer ໂດຍໃຊ້ role_id ແຍກ. ຈາກການວິເຄາະກ່ອນໜ້ານີ້, ເຮົາໃຊ້ users ເປັນທັງ Admin/Staff ແລະ Customer.
+         ດັ່ງນັ້ນ, ຕາຕະລາງ customers ນີ້ອາດຈະເປັນຂໍ້ມູນລູກຄ້າເພີ່ມເຕີມທີ່ບໍ່ຈຳເປັນຕ້ອງມີບັນຊີ Login.
+
+
+  8. `bookings` Table (ຂໍ້ມູນການຈອງ)
+   * id: INT, PK, Auto-increment
+   * customer_id: INT, FK to users.id (ຜູ້ຈອງ) - ຖ້າ `customers` ເປັນຕາຕະລາງແຍກ, ຄວນເປັນ FK to `customers.id` ຫຼື ມີ `user_id` ຖ້າລູກຄ້າ 
+     Login ຜ່ານ `users`.
+   * car_id: INT, FK to cars.id
+   * pickup_date: DATE
+   * return_date: DATE
+   * total_price: DECIMAL
+   * booking_status: ENUM ('Awaiting Payment', 'Confirmed', 'Cancelled', 'Completed', 'In Progress', 'Pending')
+   * created_at, updated_at: TIMESTAMP
+
+
+  9. `payments` Table (ຂໍ້ມູນການຊຳລະເງິນ)
+   * id: INT, PK, Auto-increment
+   * booking_id: INT, FK to bookings.id (ON DELETE CASCADE)
+   * customer_id: INT, FK to users.id (ON DELETE CASCADE) - ເຊັ່ນດຽວກັນ, ຖ້າ `customers` ເປັນຕາຕະລາງແຍກ, ຄວນເປັນ FK to `customers.id`.
+   * amount: DECIMAL
+   * payment_method: VARCHAR (e.g., 'BCEL One', 'Bank Transfer', 'Cash', 'Walk-in / Direct')
+   * payment_date: TIMESTAMP
+   * transaction_id: VARCHAR, NULLABLE (ເລກທີ່ອ້າງອີງການໂອນ)
+   * slip_image_url: VARCHAR, NULLABLE (Path to image in public/slips/)
+   * status: ENUM ('Pending', 'Paid', 'Failed', 'Cancelled')
+   * approved_by: INT, FK to users.id, NULLABLE (Admin/Staff ທີ່ອະນຸມັດ)
+   * approved_at: TIMESTAMP, NULLABLE
+   * created_at, updated_at: TIMESTAMP
+
+
+  10. `transactions` Table (ລາຍຮັບ-ລາຍຈ່າຍອື່ນໆ)
+   * id: INT, PK, Auto-increment
+   * booking_id: INT, FK to bookings.id, NULLABLE (ເຊື່ອມກັບການຈອງຖ້າກ່ຽວຂ້ອງ)
+   * recorded_by: INT, FK to users.id (ຜູ້ບັນທຶກທຸລະກຳ)
+   * type: ENUM ('income', 'expense')
+   * amount: DECIMAL
+   * description: TEXT, NULLABLE
+   * transaction_date: TIMESTAMP
+   * created_at, updated_at: TIMESTAMP
+
+
+  11. `personal_access_tokens` Table (Laravel Sanctum API Tokens)
+   * id: BIGINT, PK, Auto-increment
+   * tokenable_type: VARCHAR
+   * tokenable_id: BIGINT
+   * name: VARCHAR
+   * token: VARCHAR, UNIQUE
+   * abilities: TEXT, NULLABLE
+   * last_used_at: TIMESTAMP, NULLABLE
+   * expires_at: TIMESTAMP, NULLABLE
+   * created_at, updated_at: TIMESTAMP
+       * ໝາຍເຫດ: ຕາຕະລາງລະບົບ, ໃຊ້ສຳລັບການຢືນຢັນຕົວຕົນຂອງ API.
+
+
+  12. `cache` Table (Laravel Cache)
+   * key: VARCHAR, PK
+   * value: MEDIUMTEXT
+   * expiration: INTEGER
+       * ໝາຍເຫດ: ຕາຕະລາງລະບົບ, ໃຊ້ສຳລັບການເກັບ Cache ຂອງ Laravel.
+
+  ---
+
+  ສະຫຼຸບ:
+
+
+   * ຕາຕະລາງຫຼັກ (Business Logic): users, roles, permissions, settings, car_types, cars, customers, bookings, payments, transactions
+     (ລວມ 10 ຕາຕະລາງ).
+   * ຕາຕະລາງລະບົບ (System/Infrastructure): personal_access_tokens, cache (ລວມ 2 ຕາຕະລາງ).
+
+
+  ລວມທັງໝົດ 12 ຕາຕະລາງ. ຖ້າເຈົ້າໝາຍເຖິງ 11 ຕາຕະລາງ, ອາດຈະເປັນການນັບລວມ personal_access_tokens ແຕ່ບໍ່ລວມ cache ຫຼື ໃນທາງກັບກັນ.

@@ -1,1 +1,1 @@
-<template><div>Report Bookings</div></template>
+<template><div>ລາຍງານການຈອງ</div></template>

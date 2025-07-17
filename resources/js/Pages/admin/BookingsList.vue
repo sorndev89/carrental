@@ -1,553 +1,454 @@
 <template lang="">
-   		<div class="page-header">
-						<div class="add-item d-flex">
-							<div class="page-title">
-								<h4 class="fw-bold">Users</h4>
-								<h6>Manage your users</h6>
-							</div>
-						</div>
-						<ul class="table-top-head">
-							<li>
-								<a data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Pdf" data-bs-original-title="Pdf"><img :src="url + '/assets/img/icons/pdf.svg'" alt="img"></a>
-							</li>
-							<li>
-								<a data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Excel" data-bs-original-title="Excel"><img :src="url + '/assets/img/icons/excel.svg'" alt="img"></a>
-							</li>
-							<li>
-								<a data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Refresh" data-bs-original-title="Refresh"><i class="ti ti-refresh"></i></a>
-							</li>
-							<li>
-								<a data-bs-toggle="tooltip" data-bs-placement="top" id="collapse-header" aria-label="Collapse" data-bs-original-title="Collapse"><i class="ti ti-chevron-up"></i></a>
-							</li>
-						</ul>
-						<div class="page-btn">
-							<a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-user"><i class="ti ti-circle-plus me-1"></i>Add User</a>
-						</div>
-					</div>
+    <div class="page-header">
+        <div class="add-item d-flex">
+            <div class="page-title">
+                <h4 class="fw-bold">ລາຍການຈອງ</h4>
+                        <h6>ຈັດການລາຍການຈອງຂອງທ່ານ</h6>
+            </div>
+        </div>
+        <ul class="table-top-head">
+            <li>
+                <a data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Pdf" data-bs-original-title="Pdf"><img :src="url + '/assets/img/icons/pdf.svg'" alt="img"></a>
+            </li>
+            <li>
+                <a data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Excel" data-bs-original-title="Excel"><img :src="url + '/assets/img/icons/excel.svg'" alt="img"></a>
+            </li>
+            <li>
+                <a data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Refresh" data-bs-original-title="Refresh"><i class="ti ti-refresh"></i></a>
+            </li>
+            <li>
+                <a data-bs-toggle="tooltip" data-bs-placement="top" id="collapse-header" aria-label="Collapse" data-bs-original-title="Collapse"><i class="ti ti-chevron-up"></i></a>
+            </li>
+        </ul>
+        <div class="page-btn">
+            <a href="#" class="btn btn-primary" @click="addBooking()"><i class="ti ti-circle-plus me-1"></i>ເພີ່ມການຈອງ</a>
+        </div>
+    </div>
 
-
-					<!-- /product list -->
-					<div class="card">
-						<div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
-							<div class="search-set">
-								<div class="search-input">
-									<span class="btn-searchset"><i class="ti ti-search fs-14 feather-search"></i></span>
-								<div id="DataTables_Table_0_filter" class="dataTables_filter"><label> <input type="search" class="form-control form-control-sm" placeholder="Search" aria-controls="DataTables_Table_0"></label></div></div>
-							</div>
-							<div class="d-flex table-dropdown my-xl-auto right-content align-items-center flex-wrap row-gap-3">
-										
-								<div class="dropdown">
-									<a href="javascript:void(0);" class="dropdown-toggle btn btn-white btn-md d-inline-flex align-items-center" data-bs-toggle="dropdown">
-										Status
-									</a>
-									<ul class="dropdown-menu  dropdown-menu-end p-3">
-										<li>
-											<a href="javascript:void(0);" class="dropdown-item rounded-1">Active</a>
-										</li>
-										<li>
-											<a href="javascript:void(0);" class="dropdown-item rounded-1">Inactive</a>
-										</li>
-							
-									</ul>
-								</div>
-							</div>
-						</div>
-						<div class="card-body p-0">
-							<div class="table-responsive">
-								<div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer table-responsive"><table class="table datatable dataTable no-footer" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
-									<thead class="thead-light">
-										<tr><th class="no-sort sorting sorting_asc" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label=": activate to sort column descending" style="width: 35px;" aria-sort="ascending">
-												<label class="checkboxs">
-													<input type="checkbox" id="select-all">
-													<span class="checkmarks"></span>
-												</label>
-											</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="User Name: activate to sort column ascending" style="width: 138.805px;">User Name</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Phone: activate to sort column ascending" style="width: 94.8047px;">Phone</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Email: activate to sort column ascending" style="width: 144.555px;">Email</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Role: activate to sort column ascending" style="width: 91.3828px;">Role</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style="width: 49.2734px;">Status</th><th class="no-sort sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label=": activate to sort column ascending" style="width: 106px;"></th></tr>
-									</thead>
-									<tbody>					
-									<tr class="odd">
-											<td class="sorting_1">
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>
-											<td>
-												<div class="d-flex align-items-center">
-													<a href="javascript:void(0);" class="avatar avatar-md me-2">
-														<img :src="url + '/assets/img/users/user-47.png'" alt="product">
-													</a>
-													<a href="javascript:void(0);">Henry Bryant</a>
-												</div>
-											</td>
-											<td>+12498345785</td>
-											<td>henry@example.com</td>
-											<td>Admin</td>
-											<td><span class="d-inline-flex align-items-center p-1 pe-2 rounded-1 text-white bg-success fs-10"><i class="ti ti-point-filled me-1 fs-11"></i>Active</span></td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2 mb-0" href="javascript:void(0);">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye action-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-													</a>
-													<a class="me-2 p-2 mb-0" data-bs-toggle="modal" data-bs-target="#edit-user">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-													</a>
-													<a data-bs-toggle="modal" data-bs-target="#delete-modal" class="p-2 mb-0" href="javascript:void(0);">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-													</a>
-												</div>
-											</td>
-										</tr><tr class="even">
-											<td class="sorting_1">
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>
-											<td>
-												<div class="d-flex align-items-center">
-													<a href="javascript:void(0);" class="avatar avatar-md me-2">
-														<img :src="url + '/assets/img/users/user-02.jpg'" alt="product">
-													</a>
-													<div>
-														<a href="javascript:void(0);">Jenny Ellis</a>
-													</div>
-													
-												</div>
-											</td>
-											<td>+13178964582</td>
-											<td>jenny@example.com</td>
-											<td>Manager</td>
-											<td><span class="d-inline-flex align-items-center p-1 pe-2 rounded-1 text-white bg-success fs-10"><i class="ti ti-point-filled me-1 fs-11"></i>Active</span></td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2 mb-0" href="javascript:void(0);">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye action-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-													</a>
-													<a class="me-2 p-2 mb-0" data-bs-toggle="modal" data-bs-target="#edit-user">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-													</a>
-													<a data-bs-toggle="modal" data-bs-target="#delete-modal" class="p-2 mb-0" href="javascript:void(0);">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-													</a>
-												</div>
-											</td>
-										</tr><tr class="odd">
-											<td class="sorting_1">
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>
-											<td>
-												<div class="d-flex align-items-center">
-													<a href="javascript:void(0);" class="avatar avatar-md me-2">
-														<img :src="url + '/assets/img/users/user-43.png'" alt="product">
-													</a>
-													<a href="javascript:void(0);">Leon Baxter</a>
-												</div>
-											</td>
-											<td>+12796183487</td>
-											<td>leon@example.com</td>
-											<td>Salesman</td>
-											<td><span class="d-inline-flex align-items-center p-1 pe-2 rounded-1 text-white bg-success fs-10"><i class="ti ti-point-filled me-1 fs-11"></i>Active</span></td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2 mb-0" href="javascript:void(0);">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye action-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-													</a>
-													<a class="me-2 p-2 mb-0" data-bs-toggle="modal" data-bs-target="#edit-user">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-													</a>
-													<a data-bs-toggle="modal" data-bs-target="#delete-modal" class="p-2 mb-0" href="javascript:void(0);">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-													</a>
-												</div>
-											</td>
-										</tr><tr class="even">
-											<td class="sorting_1">
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>
-											<td>
-												<div class="d-flex align-items-center">
-													<a href="javascript:void(0);" class="avatar avatar-md me-2">
-														<img :src="url + '/assets/img/users/user-35.jpg'" alt="product">
-													</a>
-													<a href="javascript:void(0);">Karen Flores</a>
-												</div>
-											</td>
-											<td>+17538647943</td>
-											<td>karen@example.com</td>
-											<td>Supervisor</td>
-											<td><span class="d-inline-flex align-items-center p-1 pe-2 rounded-1 text-white bg-success fs-10"><i class="ti ti-point-filled me-1 fs-11"></i>Active</span></td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2 mb-0" href="javascript:void(0);">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye action-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-													</a>
-													<a class="me-2 p-2 mb-0" data-bs-toggle="modal" data-bs-target="#edit-user">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-													</a>
-													<a data-bs-toggle="modal" data-bs-target="#delete-modal" class="p-2 mb-0" href="javascript:void(0);">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-													</a>
-												</div>
-											</td>
-										</tr><tr class="odd">
-											<td class="sorting_1">
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>
-											<td>
-												<div class="d-flex align-items-center">
-													<a href="javascript:void(0);" class="avatar avatar-md me-2">
-														<img :src="url + '/assets/img/users/user-44.png'" alt="product">
-													</a>
-													<a href="javascript:void(0);">Michael Dawson</a>
-												</div>
-											</td>
-											<td>+13798132475 </td>
-											<td>michael@example.com</td>
-											<td>Store Keeper</td>
-											<td><span class="d-inline-flex align-items-center p-1 pe-2 rounded-1 text-white bg-success fs-10"><i class="ti ti-point-filled me-1 fs-11"></i>Active</span></td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2 mb-0" href="javascript:void(0);">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye action-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-													</a>
-													<a class="me-2 p-2 mb-0" data-bs-toggle="modal" data-bs-target="#edit-user">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-													</a>
-													<a data-bs-toggle="modal" data-bs-target="#delete-modal" class="p-2 mb-0" href="javascript:void(0);">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-													</a>
-												</div>
-											</td>
-										</tr><tr class="even">
-											<td class="sorting_1">
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>
-											<td>
-												<div class="d-flex align-items-center">
-													<a href="javascript:void(0);" class="avatar avatar-md me-2">
-														<img :src="url + '/assets/img/users/user-37.jpg'" alt="product">
-													</a>
-													<a href="javascript:void(0);">Karen Galvan</a>
-												</div>
-											</td>
-											<td>+17596341894</td>
-											<td>karen@example.com</td>
-											<td>Purchase</td>
-											<td><span class="d-inline-flex align-items-center p-1 pe-2 rounded-1 text-white bg-success fs-10"><i class="ti ti-point-filled me-1 fs-11"></i>Active</span></td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2 mb-0" href="javascript:void(0);">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye action-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-													</a>
-													<a class="me-2 p-2 mb-0" data-bs-toggle="modal" data-bs-target="#edit-user">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-													</a>
-													<a data-bs-toggle="modal" data-bs-target="#delete-modal" class="p-2 mb-0" href="javascript:void(0);">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-													</a>
-												</div>
-											</td>
-										</tr><tr class="odd">
-											<td class="sorting_1">
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>
-											<td>
-												<div class="d-flex align-items-center">
-													<a href="javascript:void(0);" class="avatar avatar-md me-2">
-														<img :src="url + '/assets/img/users/user-48.png'" alt="product">
-													</a>
-													<a href="javascript:void(0);">Thomas Ward</a>
-												</div>
-											</td>
-											<td>+12973548678</td>
-											<td>thomas@example.com</td>
-											<td>Delivery Biker</td>
-											<td><span class="d-inline-flex align-items-center p-1 pe-2 rounded-1 text-white bg-success fs-10"><i class="ti ti-point-filled me-1 fs-11"></i>Active</span></td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2 mb-0" href="javascript:void(0);">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye action-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-													</a>
-													<a class="me-2 p-2 mb-0" data-bs-toggle="modal" data-bs-target="#edit-user">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-													</a>
-													<a data-bs-toggle="modal" data-bs-target="#delete-modal" class="p-2 mb-0" href="javascript:void(0);">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-													</a>
-												</div>
-											</td>
-										</tr><tr class="even">
-											<td class="sorting_1">
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>
-											<td>
-												<div class="d-flex align-items-center">
-													<a href="javascript:void(0);" class="avatar avatar-md me-2">
-														<img :src="url + '/assets/img/users/user-38.jpg'" alt="product">
-													</a>
-													<a href="javascript:void(0);">Aliza Duncan</a>
-												</div>
-											</td>
-											<td>+13147858357</td>
-											<td>aliza@example.com</td>
-											<td>Maintenance</td>
-											<td><span class="d-inline-flex align-items-center p-1 pe-2 rounded-1 text-white bg-success fs-10"><i class="ti ti-point-filled me-1 fs-11"></i>Active</span></td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2 mb-0" href="javascript:void(0);">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye action-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-													</a>
-													<a class="me-2 p-2 mb-0" data-bs-toggle="modal" data-bs-target="#edit-user">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-													</a>
-													<a data-bs-toggle="modal" data-bs-target="#delete-modal" class="p-2 mb-0" href="javascript:void(0);">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-													</a>
-												</div>
-											</td>
-										</tr><tr class="odd">
-											<td class="sorting_1">
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>
-											<td>
-												<div class="d-flex align-items-center">
-													<a href="javascript:void(0);" class="avatar avatar-md me-2">
-														<img :src="url + '/assets/img/users/user-45.png'" alt="product">
-													</a>
-													<a href="javascript:void(0);">James Higham</a>
-												</div>
-											</td>
-											<td>+11978348626</td>
-											<td>james@example.com</td>
-											<td>Quality Analyst</td>
-											<td><span class="d-inline-flex align-items-center p-1 pe-2 rounded-1 text-white bg-success fs-10"><i class="ti ti-point-filled me-1 fs-11"></i>Active</span></td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2 mb-0" href="javascript:void(0);">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye action-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-													</a>
-													<a class="me-2 p-2 mb-0" data-bs-toggle="modal" data-bs-target="#edit-user">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-													</a>
-													<a data-bs-toggle="modal" data-bs-target="#delete-modal" class="p-2 mb-0" href="javascript:void(0);">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-													</a>
-												</div>
-											</td>
-										</tr><tr class="even">
-											<td class="sorting_1">
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>
-											<td>
-												<div class="d-flex align-items-center">
-													<a href="javascript:void(0);" class="avatar avatar-md me-2">
-														<img :src="url + '/assets/img/users/user-40.jpg'" alt="product">
-													</a>
-													<a href="javascript:void(0);">Jada Robinson</a>
-												</div>
-											</td>
-											<td>+12678934561</td>
-											<td>robinson@example.com</td>
-											<td>Accountant</td>
-											<td><span class="d-inline-flex align-items-center p-1 pe-2 rounded-1 text-white bg-success fs-10"><i class="ti ti-point-filled me-1 fs-11"></i>Active</span></td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2 mb-0" href="javascript:void(0);">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye action-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-													</a>
-													<a class="me-2 p-2 mb-0" data-bs-toggle="modal" data-bs-target="#edit-user">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-													</a>
-													<a data-bs-toggle="modal" data-bs-target="#delete-modal" class="p-2 mb-0" href="javascript:void(0);">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-													</a>
-												</div>
-											</td>
-										</tr></tbody>
-								</table>
+    <div class="card">
+        <div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
+            <div class="search-set">
+                <div class="search-input">
+                    <span class="btn-searchset"><i class="ti ti-search fs-14 feather-search"></i></span>
+                    <div class="dataTables_filter"><label> <input type="search" v-model="searchQuery" class="form-control form-control-sm" @keyup.enter="getBookings()" placeholder="ຄົ້ນຫາ..."></label></div>
+                </div>
+            </div>
+            <div class="d-flex table-dropdown my-xl-auto right-content align-items-center flex-wrap row-gap-3">
+                <div class="dropdown">
+                    <a href="javascript:void(0);" class="dropdown-toggle btn btn-white btn-md d-inline-flex align-items-center" data-bs-toggle="dropdown">
+                        {{ bookingStatus === 'all' ? 'ທັງໝົດ' : getBookingStatusText(bookingStatus) }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end p-3">
+                        <li><a href="javascript:void(0);" @click="bookingStatus='all'" class="dropdown-item rounded-1">ທັງໝົດ</a></li>
+                        <li><a href="javascript:void(0);" @click="bookingStatus='pending'" class="dropdown-item rounded-1">ລໍຖ້າ</a></li>
+                        <li><a href="javascript:void(0);" @click="bookingStatus='confirmed'" class="dropdown-item rounded-1">ຢືນຢັນແລ້ວ</a></li>
+                        <li><a href="javascript:void(0);" @click="bookingStatus='cancelled'" class="dropdown-item rounded-1">ຍົກເລີກ</a></li>
+                        <li><a href="javascript:void(0);" @click="bookingStatus='completed'" class="dropdown-item rounded-1">ສຳເລັດ</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table datatable">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>ລູກຄ້າ</th>
+                            <th>ລົດ</th>
+                            <th>ວັນທີຮັບ</th>
+                            <th>ວັນທີສົ່ງຄືນ</th>
+                            <th>ລາຄາລວມ</th>
+                            <th>ສະຖານະ</th>
+                            <th>ການກະທຳ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="booking in bookings.data" :key="booking.id">
+                            <td>{{ booking.customer.first_name }} {{ booking.customer.last_name }}</td>
+                            <td>{{ booking.car.make }} {{ booking.car.model }} ({{ booking.car.license_plate }})</td>
+                            <td>{{ booking.pickup_date }}</td>
+                            <td>{{ booking.return_date }}</td>
+                            <td>{{ booking.total_price }}</td>
+                            <td><span class="d-inline-flex align-items-center p-1 pe-2 rounded-1 text-white fs-10" :class="getStatusClass(booking.booking_status)"><i class="ti ti-point-filled me-1 fs-11"></i>{{ getBookingStatusText(booking.booking_status) }}</span></td>
+                            <td class="action-table-data">
+                                <div class="edit-delete-action">
+                                    <a class="me-2 p-2 mb-0" @click="editBooking(booking.id)" href="javascript:void(0);">
+                                        ແກ້ໄຂ
+                                    </a>
+                                    <a class="p-2 mb-0" href="javascript:void(0);" @click="deleteBooking(booking.id)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                                    </a>
                                 </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <Pagination :pagination="bookings" @change-per-page="changePerPage" @go-to-page="goToPage" />
+        </div>
+    </div>
 
-                                <div class="d-flex">
-                                    <div class=" p-2 d-flex align-items-center ">
-                                           
-                                                <label class="me-2"> ສະແດງ</label>
-                                                <select class="form-select form-select-sm me-2">
-                                                    <option value="10">10</option>
-                                                    <option value="25">25</option>
-                                                    <option value="50">50</option>
-                                                    <option value="100">100</option>
-                                                </select> 
-                                                <div class=" text-nowrap "  role="status" aria-live="polite">1 - 10 of 10 items</div>
-                                          
+    <!-- Add/Edit Booking Modal -->
+    <div class="modal fade" id="add-booking">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="page-wrapper-new p-0">
+                    <div class="">
+                        <div class="modal-header">
+                            <div class="page-title">
+                                <h4>{{ form_type ? 'ເພີ່ມການຈອງ' : 'ແກ້ໄຂການຈອງ' }}</h4>
+                            </div>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form @submit.prevent="saveBooking">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-lg-6 mb-3">
+                                        <label class="form-label">ລູກຄ້າ<span class="text-danger ms-1">*</span></label>
+                                        <div v-if="booking.customer_id && selectedCustomer" class="d-flex align-items-center">
+                                            <input type="text" :value="selectedCustomer.first_name + ' ' + selectedCustomer.last_name" class="form-control" disabled>
+                                            <button type="button" @click.prevent="clearCustomerSelection" class="btn btn-sm btn-outline-danger ms-2">ປ່ຽນ</button>
                                         </div>
-                                        <div class="w-100">
-                                            <div class="dataTables_paginate d-flex justify-content-end" >
-                                                <ul class="pagination">
-                                                    <li class="paginate_button page-item previous disabled" id="DataTables_Table_0_previous">
-                                                        <a aria-controls="DataTables_Table_0" aria-disabled="true" role="link" data-dt-idx="previous" tabindex="-1" class="page-link">
-                                                            <i class="fa fa-angle-left"></i> 
-                                                        </a>
-                                                    </li>
-                                                    <li class="paginate_button page-item active">
-                                                        <a href="#" aria-controls="DataTables_Table_0" role="link" aria-current="page" data-dt-idx="0" tabindex="0" class="page-link">1
-                                                        </a>
-                                                    </li>
-                                                    <li class="paginate_button page-item next disabled" id="DataTables_Table_0_next"><a aria-controls="DataTables_Table_0" aria-disabled="true" role="link" data-dt-idx="next" tabindex="-1" class="page-link"> 
-                                                        <i class=" fa fa-angle-right"></i>
-                                                        </a>
-                                                    </li>
-                                                </ul>
+                                        <div v-else>
+                                            <input type="text" v-model="customerSearchQuery" @input="searchCustomers" class="form-control" placeholder="ຄົ້ນຫາຊື່ ຫຼື ນາມສະກຸນ...">
+                                            <div class="list-group position-absolute" style="z-index: 1000;" v-if="customerSearchResults.length > 0">
+                                                <a href="#" v-for="customer in customerSearchResults" :key="customer.id" @click.prevent="selectCustomer(customer)" class="list-group-item list-group-item-action">
+                                                    {{ customer.first_name }} {{ customer.last_name }}
+                                                </a>
+                                            </div>
+                                            <div v-if="customerSearchQuery.length > 1 && customerSearchResults.length === 0" class="mt-2">
+                                                <p class="text-muted">ບໍ່ພົບຂໍ້ມູນລູກຄ້າ. <a href="#" @click.prevent="openAddCustomerModal">ເພີ່ມລູກຄ້າໃໝ່</a></p>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="col-lg-6 mb-3">
+                                        <label class="form-label">ລົດ<span class="text-danger ms-1">*</span></label>
+                                        <select v-model="booking.car_id" class="form-select">
+                                            <option v-for="car in carsList" :key="car.id" :value="car.id">{{ car.make }} {{ car.model }} ({{ car.license_plate }})</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-6 mb-3">
+                                        <label class="form-label">ວັນທີຮັບລົດ<span class="text-danger ms-1">*</span></label>
+                                        <input type="date" v-model="booking.pickup_date" class="form-control">
+                                    </div>
+                                    <div class="col-lg-6 mb-3">
+                                        <label class="form-label">ວັນທີສົ່ງຄືນ<span class="text-danger ms-1">*</span></label>
+                                        <input type="date" v-model="booking.return_date" class="form-control">
+                                    </div>
+                                    <div class="col-lg-6 mb-3">
+                                        <label class="form-label">ລາຄາລວມ<span class="text-danger ms-1">*</span></label>
+                                        <input type="number" step="0.01" v-model="booking.total_price" class="form-control">
+                                    </div>
+                                    <div class="col-lg-6 mb-3">
+                                        <label class="form-label">ສະຖານະການຈອງ<span class="text-danger ms-1">*</span></label>
+                                        <select v-model="booking.booking_status" class="form-select">
+                                            <option value="pending">ລໍຖ້າ</option>
+                                            <option value="confirmed">ຢືນຢັນແລ້ວ</option>
+                                            <option value="cancelled">ຍົກເລີກ</option>
+                                            <option value="completed">ສຳເລັດ</option>
+                                        </select>
+                                    </div>
                                 </div>
-
-                                    
                             </div>
-                                    
-                                    
-							
-						</div>
-					</div>
-					<!-- /product list -->
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary me-2">ບັນທຶກ</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ຍົກເລີກ</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                    <!-- Add User -->
-		<div class="modal fade" id="add-user">
-			<div class="modal-dialog modal-dialog-centered">
-				<div class="modal-content">
-					<div class="page-wrapper-new p-0">
-						<div class="content">
-							<div class="modal-header">
-								<div class="page-title">
-									<h4>Add User</h4>
-								</div>
-								<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<form action="users.html">
-								<div class="modal-body">
-									<div class="row">
-										<div class="col-lg-12">
-											<div class="new-employee-field">
-												
-												<div class="profile-pic-upload mb-2">
-													<div class="profile-pic">
-														<span><i data-feather="plus-circle" class="plus-down-add"></i>Add Image</span>
-													</div>
-													<div class="mb-0">
-														<div class="image-upload mb-0">
-															<input type="file">
-															<div class="image-uploads">
-																<h4>Upload Image</h4>
-															</div>
-														</div>
-														<p class="fs-13 mt-2">JPEG, PNG up to 2 MB</p>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col-lg-12">
-											<div class="mb-3">
-												<label class="form-label">User<span class="text-danger ms-1">*</span></label>
-												<input type="text" class="form-control">
-											</div>
-										</div>
-										<div class="col-lg-12">
-											<div class="mb-3">
-												<label class="form-label">Role<span class="text-danger ms-1">*</span></label>
-												<select class="select">
-													<option>Select</option>
-													<option>Admin</option>
-													<option>Manager</option>
-													<option>Salesman</option>
-												</select>
-											</div>
-										</div>
-										<div class="col-lg-12">
-											<div class="mb-3">
-												<label class="form-label">Email<span class="text-danger ms-1">*</span></label>
-												<input type="email" class="form-control">
-											</div>
-										</div>
-										<div class="col-lg-12">
-											<div class="mb-3">
-												<label class="form-label">Phone<span class="text-danger ms-1">*</span></label>
-												<input type="tel" class="form-control">
-											</div>
-										</div>
-									
-										<div class="col-lg-6">
-											<div class="mb-3">
-												<label class="form-label">Password<span class="text-danger ms-1">*</span></label>
-												<div class="pass-group">
-													<input type="password" class="pass-input form-control">
-													<i class="ti ti-eye-off toggle-password"></i>
-												</div>
-											</div>
-										</div>
-										<div class="col-lg-6">
-											<div class="mb-3">
-												<label class="form-label">Confirm Password<span class="text-danger ms-1">*</span></label>
-												<div class="pass-group">
-													<input type="password" class="pass-input form-control">
-													<i class="ti ti-eye-off toggle-password"></i>
-												</div>
-											</div>
-										</div>
-										<div class="col-lg-12">
-											<div class="status-toggle modal-status d-flex justify-content-between align-items-center">
-												<span class="status-label">Status</span>
-												<input type="checkbox" id="user1" class="check" checked="">
-												<label for="user1" class="checktoggle">	</label>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="modal-footer">
-									<button type="button" class="btn me-2 btn-secondary" data-bs-dismiss="modal">Cancel</button>
-									<button type="submit" class="btn btn-primary">Add User</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- /Add User -->
+    <!-- Add Customer Modal -->
+    <div class="modal fade" id="add-customer-modal" tabindex="-1" aria-labelledby="addCustomerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCustomerModalLabel">ເພີ່ມລູກຄ້າໃໝ່</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form @submit.prevent="saveCustomer">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">ຊື່<span class="text-danger ms-1">*</span></label>
+                            <input type="text" v-model="newCustomer.first_name" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">ນາມສະກຸນ<span class="text-danger ms-1">*</span></label>
+                            <input type="text" v-model="newCustomer.last_name" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">ເພດ<span class="text-danger ms-1">*</span></label>
+                            <select v-model="newCustomer.gender" class="form-select" required>
+                                <option value="">ເລືອກເພດ</option>
+                                <option value="male">ຊາຍ</option>
+                                <option value="female">ຍິງ</option>
+                            </select>
+                        </div>
+                         <div class="mb-3">
+                            <label class="form-label">ອີເມວ</label>
+                            <input type="email" v-model="newCustomer.email" class="form-control">
+                        </div>
+                         <div class="mb-3">
+                            <label class="form-label">ເບີໂທ</label>
+                            <input type="text" v-model="newCustomer.phone_number" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">ບັນທຶກ</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ຍົກເລີກ</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </template>
+
 <script>
+import { useRequestApiStore } from "@/Stores/RequestAPI";
+import Pagination from '@/Components/Pagination.vue';
+import { debounce } from 'lodash';
+
 export default {
+    components: {
+        Pagination
+    },
     data() {
         return {
-            url:window.location.origin,
+            url: window.location.origin, // URL ຫຼັກຂອງແອັບພລິເຄຊັນ
+            form_type: true, // ໃຊ້ເພື່ອກໍານົດວ່າຟອມແມ່ນສໍາລັບການເພີ່ມ (true) ຫຼືແກ້ໄຂ (false) ການຈອງ
+            bookingStatus: 'all', // ຕົວກອງສະຖານະການຈອງ (all, pending, confirmed, cancelled, completed)
+            edit_id: '', // ID ຂອງການຈອງທີ່ກໍາລັງແກ້ໄຂ
+            bookings: {
+                data: [], // ຂໍ້ມູນການຈອງທີ່ໄດ້ຮັບຈາກ API
+            },
+            booking: { // ວັດຖຸສໍາລັບຂໍ້ມູນການຈອງ
+                customer_id: '',
+                car_id: '',
+                pickup_date: '',
+                return_date: '',
+                total_price: '',
+                booking_status: 'pending',
+            },
+            carsList: [], // ລາຍຊື່ລົດທັງໝົດ
+            searchQuery: '', // ຄໍາຄົ້ນຫາສໍາລັບການຈອງ
+            currentPage: 1, // ໜ້າປັດຈຸບັນຂອງການແບ່ງໜ້າ
+            perPage: 10, // ຈໍານວນລາຍການຕໍ່ໜ້າ
+            modal: null, // Instance ຂອງ Modal ສໍາລັບການເພີ່ມ/ແກ້ໄຂການຈອງ
+            customerModal: null, // Instance ຂອງ Modal ສໍາລັບການເພີ່ມລູກຄ້າ
+            customerSearchQuery: '', // ຄໍາຄົ້ນຫາສໍາລັບລູກຄ້າ
+            customerSearchResults: [], // ຜົນການຄົ້ນຫາລູກຄ້າ
+            selectedCustomer: null, // ລູກຄ້າທີ່ຖືກເລືອກ
+            newCustomer: { // ວັດຖຸສໍາລັບຂໍ້ມູນລູກຄ້າໃໝ່
+                first_name: '',
+                last_name: '',
+                gender: '',
+                email: '',
+                phone_number: ''
+            },
         }
     },
+    setup() {
+        // ໃຊ້ Pinia store ສໍາລັບການຮ້ອງຂໍ API
+        const requestApi = useRequestApiStore();
+        return { requestApi };
+    },
+    methods: {
+        // ເປີດ Modal ສໍາລັບການເພີ່ມການຈອງໃໝ່
+        addBooking() {
+            this.form_type = true; // ຕັ້ງຄ່າເປັນໂໝດສ້າງ
+            this.booking = { // ລ້າງຂໍ້ມູນຟອມ
+                customer_id: '',
+                car_id: '',
+                pickup_date: '',
+                return_date: '',
+                total_price: '',
+                booking_status: 'pending',
+            };
+            this.clearCustomerSelection(); // ລ້າງການເລືອກລູກຄ້າ
+            this.modal = new bootstrap.Modal(document.getElementById('add-booking')); // ສ້າງ Modal instance
+            this.modal.show(); // ສະແດງ Modal
+        },
+        // ດຶງຂໍ້ມູນການຈອງຈາກ API
+        async getBookings() {
+            try {
+                let url = `admin/bookings?page=${this.currentPage}&per_page=${this.perPage}&search=${this.searchQuery}`;
+                if (this.bookingStatus !== 'all') {
+                    url += `&booking_status=${this.bookingStatus}`;
+                }
+                const response = await this.requestApi.getData(url);
+                this.bookings = response.bookings;
+            } catch (error) {
+                console.error("Error fetching bookings:", error);
+            }
+        },
+        // ດຶງລາຍຊື່ລົດທັງໝົດຈາກ API
+        async getCarsList() {
+            try {
+                const response = await this.requestApi.getData(`admin/cars?per_page=all`);
+                this.carsList = response.cars.data;
+            } catch (error) {
+                console.error("Error fetching cars list:", error);
+            }
+        },
+        // ດຶງຂໍ້ມູນການຈອງເພື່ອແກ້ໄຂ ແລະເປີດ Modal
+        async editBooking(id) {
+            this.form_type = false; // ຕັ້ງຄ່າເປັນໂໝດແກ້ໄຂ
+            this.edit_id = id; // ກໍານົດ ID ການຈອງທີ່ຈະແກ້ໄຂ
+            let data = await this.requestApi.getDataByID('admin/bookings', id);
+            this.booking = data.booking;
+            this.selectedCustomer = data.booking.customer;
+            this.customerSearchQuery = `${data.booking.customer.first_name} ${data.booking.customer.last_name}`;
+            this.customerSearchResults = [];
+            this.modal = new bootstrap.Modal(document.getElementById('add-booking'));
+            this.modal.show();
+        },
+        // ບັນທຶກ (ເພີ່ມ/ແກ້ໄຂ) ການຈອງ
+        async saveBooking() {
+            try {
+                if (this.form_type) {
+                    await this.requestApi.postData('admin/bookings', this.booking);
+                } else {
+                    await this.requestApi.updateData('admin/bookings', this.edit_id, this.booking);
+                }
+                this.getBookings(); // ໂຫຼດຂໍ້ມູນການຈອງຄືນໃໝ່
+                this.modal.hide(); // ເຊື່ອງ Modal
+            } catch (error){
+                console.error("Error saving booking:", error);
+            }
+        },
+        // ລົບການຈອງ
+        async deleteBooking(id) {
+            try {
+                await this.requestApi.deleteData('admin/bookings', id);
+                this.getBookings(); // ໂຫຼດຂໍ້ມູນການຈອງຄືນໃໝ່
+            } catch (error) {
+                console.error("Error deleting booking:", error);
+            }
+        },
+        // ປ່ຽນຈໍານວນລາຍການຕໍ່ໜ້າ
+        changePerPage(newPerPage) {
+            this.perPage = newPerPage;
+            this.currentPage = 1;
+            this.getBookings();
+        },
+        // ໄປໜ້າທີ່ລະບຸ
+        goToPage(page) {
+            this.currentPage = page;
+            this.getBookings();
+        },
+        // ໄດ້ຮັບ Class ສີສໍາລັບສະຖານະ
+        getStatusClass(status) {
+            switch (status) {
+                case 'pending': return 'bg-warning';
+                case 'confirmed': return 'bg-success';
+                case 'cancelled': return 'bg-danger';
+                case 'completed': return 'bg-info';
+                default: return 'bg-secondary';
+            }
+        },
+        // ໄດ້ຮັບຂໍ້ຄວາມສະຖານະເປັນພາສາລາວ
+        getBookingStatusText(status){
+            switch (status) {
+                case 'pending': return 'ລໍຖ້າ';
+                case 'confirmed': return 'ຢືນຢັນແລ້ວ';
+                case 'cancelled': return 'ຍົກເລີກ';
+                case 'completed': return 'ສຳເລັດ';
+                default: return 'ທັງໝົດ';
+            }
+
+        },
+        // ວິທີການທີ່ກ່ຽວຂ້ອງກັບລູກຄ້າ
+        searchCustomers: debounce(async function() { // ຄົ້ນຫາລູກຄ້າດ້ວຍ debounce ເພື່ອຫຼຸດຜ່ອນການຮ້ອງຂໍ API
+            if (this.customerSearchQuery.length < 2) {
+                this.customerSearchResults = [];
+                return;
+            }
+            try {
+                console.log('sss')
+                const response = await this.requestApi.getData(`admin/customers?search=${this.customerSearchQuery}`);
+                this.customerSearchResults = response.customers.data;
+            } catch (error) {
+                console.error("Error searching customers:", error);
+            }
+        }, 300),
+        // ເລືອກລູກຄ້າຈາກຜົນການຄົ້ນຫາ
+        selectCustomer(customer) {
+            this.selectedCustomer = customer;
+            this.booking.customer_id = customer.id;
+            this.customerSearchQuery = `${customer.first_name} ${customer.last_name}`;
+            this.customerSearchResults = [];
+        },
+        // ລ້າງການເລືອກລູກຄ້າ
+        clearCustomerSelection() {
+            this.selectedCustomer = null;
+            this.booking.customer_id = '';
+            this.customerSearchQuery = '';
+            this.customerSearchResults = [];
+        },
+        // ເປີດ Modal ເພີ່ມລູກຄ້າໃໝ່
+        openAddCustomerModal() {
+            this.newCustomer = { first_name: '', last_name: '', gender: '', email: '', phone_number: '' };
+            if (this.modal) {
+                this.modal.hide(); // ເຊື່ອງ Modal ການຈອງ
+            }
+            this.customerModal = new bootstrap.Modal(document.getElementById('add-customer-modal'));
+            this.customerModal.show();
+
+            // ຟັງເຫດການເມື່ອ Modal ລູກຄ້າຖືກເຊື່ອງ
+            document.getElementById('add-customer-modal').addEventListener('hidden.bs.modal', () => {
+                if (this.modal) {
+                    this.modal.show(); // ສະແດງ Modal ການຈອງຄືນໃໝ່
+                }
+            }, { once: true }); // ໃຊ້ { once: true } ເພື່ອລົບ listener ຫຼັງຈາກມັນຖືກເອີ້ນໃຊ້ຄັ້ງດຽວ
+        },
+        // ບັນທຶກລູກຄ້າໃໝ່
+        async saveCustomer() {
+            try {
+                const response = await this.requestApi.postData('admin/customers', this.newCustomer);
+                if(response.customer){
+                    this.selectCustomer(response.customer);
+                    this.customerModal.hide();
+                    // The 'hidden.bs.modal' listener will handle showing the booking modal
+                }
+            } catch (error) {
+                console.error("Error saving customer:", error);
+            }
+        }
+    },
+    mounted() {
+        // ເມື່ອ component ຖືກ mount, ດຶງຂໍ້ມູນການຈອງແລະລາຍຊື່ລົດ
+        this.getBookings();
+        this.getCarsList();
+    },
+    watch: {
+        // ຕິດຕາມການປ່ຽນແປງຂອງສະຖານະການຈອງເພື່ອໂຫຼດຂໍ້ມູນຄືນໃໝ່
+        bookingStatus() {
+            this.getBookings();
+        },
+        // ຕິດຕາມການປ່ຽນແປງຂອງຄໍາຄົ້ນຫາເພື່ອໂຫຼດຂໍ້ມູນຄືນໃໝ່
+        searchQuery(val) {
+            if (val.length == 0) {
+                this.getBookings();
+            }
+        },
+        // ຕິດຕາມການປ່ຽນແປງຂອງຄໍາຄົ້ນຫາລູກຄ້າ
+        customerSearchQuery(newValue) {
+            if (!newValue) {
+                this.clearCustomerSelection();
+            }
+             if (this.customerSearchQuery.length == 0) {
+                this.customerSearchResults = [];
+            }
+        }
+    }
 }
 </script>
-<style lang="">
-    
+
+<style>
+
 </style>

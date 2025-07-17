@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'api' => [ // ເພີ່ມນີ້
+            'driver' => 'jwt',
+            'provider' => 'users',
+        ],
     ],
 
     /*

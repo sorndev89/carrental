@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { useStore } from '../Store/Auth.js'; // ນຳເຂົ້າ Pinia store
+import { useAuthStore } from '../Stores/Auth.js'; // ນຳເຂົ້າ Pinia store
 
 // --- ນຳເຂົ້າ Layouts (ຮັກສາໄວ້ແບບ static ເພາະຈຳເປັນຕ້ອງໃຊ້ຕະຫຼອດ) ---
 import AdminLayout from '../Layouts/AdminLayout.vue';
@@ -9,15 +9,15 @@ import AuthLayout from '../Layouts/AuthLayout.vue';
 
 // --- ບ່ອນວ່າງສຳລັບການຢືນຢັນຕົວຕົນ / ການອະນຸຍາດ ---
 const isAuthenticated = () => {
-    const store = useStore();
+    const store = useAuthStore();
     console.log('ກຳລັງກວດສອບການຢືນຢັນຕົວຕົນ...');
-    return !!store.token && !!store.user; // ກວດສອບວ່າ token ແລະ user ມີຢູ່ໃນ store ບໍ່
+    return !!store.isAuthenticated; // ກວດສອບວ່າ token ແລະ user ມີຢູ່ໃນ store ບໍ່
 };
 
 const isAdmin = () => {
-    const store = useStore();
+    const store = useAuthStore();
     console.log('ກຳລັງກວດສອບວ່າເປັນ Admin ບໍ່...');
-    return store.user && store.user.role === 'admin'; // ກວດສອບບົດບາດຂອງຜູ້ໃຊ້
+    return store.getUser && (store.getUserType === 'Admin' || store.getUserType === 'Staff'); // ກວດສອບບົດບາດຂອງຜູ້ໃຊ້
 };
 // --- ສິ້ນສຸດບ່ອນວ່າງການຢືນຢັນຕົວຕົນ ---
 
@@ -56,6 +56,18 @@ const routes = [
                 path: 'my-rental-history',
                 name: 'my.rental.history',
                 component: () => import('../Pages/customer/MyRentalHistory.vue'), // ສົມມຸດວ່າທ່ານຈະສ້າງ component ນີ້
+                meta: { requiresAuth: true }, // ເສັ້ນທາງນີ້ຕ້ອງການການຢືນຢັນຕົວຕົນ
+            },
+            {
+                path: 'payment-upload/:bookingId',
+                name: 'payment.upload',
+                component: () => import('../Pages/customer/PaymentUpload.vue'),
+                meta: { requiresAuth: true }, // ເສັ້ນທາງນີ້ຕ້ອງການການຢືນຢັນຕົວຕົນ
+            },
+            {
+                path: 'payment-history',
+                name: 'payment.history',
+                component: () => import('../Pages/customer/PaymentHistory.vue'),
                 meta: { requiresAuth: true }, // ເສັ້ນທາງນີ້ຕ້ອງການການຢືນຢັນຕົວຕົນ
             },
         ]
@@ -133,6 +145,12 @@ const routes = [
                 path: 'finance/add',
                 name: 'admin.finance.add',
                 component: () => import('../Pages/admin/FinanceAddTransaction.vue'),
+                meta: { requiresAuth: true, requiresAdmin: true }, // ເສັ້ນທາງນີ້ຕ້ອງການການຢືນຢັນຕົວຕົນ ແລະບົດບາດ admin
+            },
+            {
+                path: 'finance/transactions',
+                name: 'admin.finance.transactions',
+                component: () => import('../Pages/admin/FinanceTransactionsList.vue'),
                 meta: { requiresAuth: true, requiresAdmin: true }, // ເສັ້ນທາງນີ້ຕ້ອງການການຢືນຢັນຕົວຕົນ ແລະບົດບາດ admin
             },
             {
@@ -238,8 +256,8 @@ router.beforeEach((to, from, next) => {
         // ຖ້າຜູ້ໃຊ້ທີ່ເຂົ້າສູ່ລະບົບພະຍາຍາມເຂົ້າເຖິງໜ້າເຂົ້າສູ່ລະບົບ, ໃຫ້ປ່ຽນເສັ້ນທາງໄປຫາ dashboard ຂອງພວກເຂົາ
         if (to.name === 'auth.login') {
             if (isAuthenticated()) {
-                const store = useStore(); // ເຂົ້າເຖິງ store ເພື່ອເອົາບົດບາດຂອງຜູ້ໃຊ້
-                if (store.user && store.user.role === 'admin') {
+                const store = useAuthStore(); // ເຂົ້າເຖິງ store ເພື່ອເອົາບົດບາດຂອງຜູ້ໃຊ້
+                if (store.getUser && (store.getUserType === 'Admin' || store.getUserType === 'Staff')) {
                     console.log('Admin ທີ່ເຂົ້າສູ່ລະບົບພະຍາຍາມເຂົ້າເຖິງໜ້າເຂົ້າສູ່ລະບົບ, ກຳລັງປ່ຽນເສັ້ນທາງໄປ dashboard admin.');
                     next({ name: 'admin.dashboard' });
                 } else { // ສົມມຸດວ່າເປັນລູກຄ້າ ຫຼືຜູ້ໃຊ້ທີ່ເຂົ້າສູ່ລະບົບອື່ນໆທີ່ບໍ່ແມ່ນ admin

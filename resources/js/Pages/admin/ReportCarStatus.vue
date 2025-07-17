@@ -1,1 +1,1 @@
-<template><div>Report Car Status</div></template>
+<template><div>ລາຍງານສະຖານະລົດ</div></template>

@@ -48,7 +48,7 @@
 <body class="">
     <div id="app"></div>
 
-
+	
 	<!-- jQuery -->
 	<script src="{{ url('assets/js/jquery-3.7.1.min.js')}}" ></script>
 
@@ -56,5 +56,9 @@
 	<script src="{{ url('assets/js/bootstrap.bundle.min.js')}}" ></script>
 
     @vite('resources/js/app.js')
+
+	<!-- <script>
+      feather.replace();
+    </script> -->
 </body>
 </html>

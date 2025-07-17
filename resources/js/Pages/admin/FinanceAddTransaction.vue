@@ -1,1 +1,1 @@
-<template><div>Finance Add Transaction</div></template>
+<template><div>ເພີ່ມທຸລະກຳການເງິນ</div></template>

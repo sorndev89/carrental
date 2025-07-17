@@ -1,1 +1,1 @@
-<template><div>Report Finance</div></template>
+<template><div>ລາຍງານການເງິນ</div></template>
